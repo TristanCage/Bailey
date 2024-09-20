@@ -66,7 +66,11 @@ export declare const makeChatsSocket: (config: SocketConfig) => {
     user: import("../Types").Contact | undefined;
     generateMessageTag: () => string;
     query: (node: BinaryNode, timeoutMs?: number | undefined) => Promise<BinaryNode>;
-    waitForMessage: <T_2>(msgId: string, timeoutMs?: number | undefined) => Promise<T_2>;
+    waitForMessage: <T_2>(msgId: string, timeoutMs?: number | undefined) => Promise<T_2>; /**
+     * modify a chat -- mark unread, read etc.
+     * lastMessages must be sorted in reverse chronologically
+     * requires the last messages till the last message received; required for archive & unread
+    */
     waitForSocketOpen: () => Promise<void>;
     sendRawMessage: (data: Uint8Array | Buffer) => Promise<void>;
     sendNode: (frame: BinaryNode) => Promise<void>;
