@@ -2,8 +2,6 @@
 /// <reference types="node" />
 import { UserFacingSocketConfig } from '../Types';
 declare const makeWASocket: (config: UserFacingSocketConfig) => {
-    register: (code: string) => Promise<import("./registration").ExistsResponse>;
-    requestRegistrationCode: (registrationOptions?: import("./registration").RegistrationOptions | undefined) => Promise<import("./registration").ExistsResponse>;
     logger: import("pino").Logger<import("pino").LoggerOptions>;
     getOrderDetails: (orderId: string, tokenBase64: string) => Promise<import("../Types").OrderDetails>;
     getCatalog: ({ jid, limit, cursor }: import("../Types").GetCatalogOptions) => Promise<{
@@ -118,7 +116,7 @@ declare const makeWASocket: (config: UserFacingSocketConfig) => {
         fromMe?: boolean | undefined;
     }[], star: boolean) => Promise<void>;
     type: "md";
-    ws: any;
+    ws: import("./Client/websocket").WebSocketClient;
     ev: import("../Types").BaileysEventEmitter & {
         process(handler: (events: Partial<import("../Types").BaileysEventMap>) => void | Promise<void>): () => void;
         buffer(): void;

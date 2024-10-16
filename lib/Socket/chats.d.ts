@@ -2,8 +2,8 @@
 import { Boom } from '@hapi/boom';
 import { proto } from '../../WAProto';
 import { ChatModification, MessageUpsertType, SocketConfig, WABusinessProfile, WAMediaUpload, WAPatchCreate, WAPresence, WAPrivacyCallValue, WAPrivacyGroupAddValue, WAPrivacyOnlineValue, WAPrivacyValue, WAReadReceiptsValue } from '../Types';
-import { BinaryNode } from '../WABinary';
 import { LabelActionBody } from '../Types/Label';
+import { BinaryNode } from '../WABinary';
 export declare const makeChatsSocket: (config: SocketConfig) => {
     processingMutex: {
         mutex<T>(code: () => T | Promise<T>): Promise<T>;
@@ -52,7 +52,7 @@ export declare const makeChatsSocket: (config: SocketConfig) => {
         fromMe?: boolean;
     }[], star: boolean) => Promise<void>;
     type: "md";
-    ws: any;
+    ws: import("./Client/websocket").WebSocketClient;
     ev: import("../Types").BaileysEventEmitter & {
         process(handler: (events: Partial<import("../Types").BaileysEventMap>) => void | Promise<void>): () => void;
         buffer(): void;

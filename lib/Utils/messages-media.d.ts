@@ -76,7 +76,7 @@ export declare const encryptedStream: (media: WAMediaUpload, mediaType: MediaTyp
 export type MediaDownloadOptions = {
     startByte?: number;
     endByte?: number;
-    options?: AxiosRequestConfig<any>;
+    options?: AxiosRequestConfig<{}>;
 };
 export declare const getUrlFromDirectPath: (directPath: string) => string;
 export declare const downloadContentFromMessage: ({ mediaKey, directPath, url }: DownloadableMessage, type: MediaType, opts?: MediaDownloadOptions) => Promise<Transform>;

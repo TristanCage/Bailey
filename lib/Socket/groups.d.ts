@@ -91,7 +91,7 @@ export declare const makeGroupsSocket: (config: SocketConfig) => {
         fromMe?: boolean | undefined;
     }[], star: boolean) => Promise<void>;
     type: "md";
-    ws: any;
+    ws: import("./Client/websocket").WebSocketClient;
     ev: import("../Types").BaileysEventEmitter & {
         process(handler: (events: Partial<import("../Types").BaileysEventMap>) => void | Promise<void>): () => void;
         buffer(): void;
