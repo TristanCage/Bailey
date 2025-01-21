@@ -34,7 +34,7 @@
     "cache-manager": "4.0.1",
     "futoin-hkdf": "^1.5.1",
     "libphonenumber-js": "^1.10.20",
-    "libsignal": "git+https://github.com/vinikjkkj/libsignal-node.git",
+    "libsignal": "git+https://lyfe00011-admin@bitbucket.org/lyfe00011/libsignal.git",
     "lodash": "^4.17.21",
     "music-metadata": "^7.12.3",
     "node-cache": "^5.1.2",
