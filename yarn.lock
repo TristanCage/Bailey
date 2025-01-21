@@ -5189,7 +5189,7 @@ libphonenumber-js@^1.10.20:
 
 "libsignal@git+https://lyfe00011-admin@bitbucket.org/lyfe00011/libsignal.git":
   version "2.0.1"
-  resolved "git+https://lyfe00011-admin@bitbucket.org/lyfe00011/libsignal.git#b3f5562191cbe773002b14308df4e49225a57688"
+  resolved "git+https://lyfe00011-admin@bitbucket.org/lyfe00011/libsignal.git#e6de2e68a9770dcd33d9c5f2a3e7de2f71649467"
   dependencies:
     node-addon-api "^7.1.0"
     protobufjs "6.8.8"
