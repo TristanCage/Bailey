@@ -1,4 +1,5 @@
 /// <reference types="node" />
+/// <reference types="node" />
 import { proto } from '../../WAProto';
 import { GroupMetadata, ParticipantAction, SocketConfig } from '../Types';
 import { BinaryNode } from '../WABinary';
@@ -117,7 +118,7 @@ export declare const makeGroupsSocket: (config: SocketConfig) => {
     uploadPreKeys: (count?: number) => Promise<void>;
     uploadPreKeysToServerIfRequired: () => Promise<void>;
     requestPairingCode: (phoneNumber: string) => Promise<string>;
-    waitForConnectionUpdate: (check: (u: Partial<import("../Types").ConnectionState>) => boolean | undefined, timeoutMs?: number | undefined) => Promise<void>;
+    waitForConnectionUpdate: (check: (u: Partial<import("../Types").ConnectionState>) => Promise<boolean | undefined>, timeoutMs?: number | undefined) => Promise<void>;
     sendWAMBuffer: (wamBuffer: Buffer) => Promise<BinaryNode>;
 };
 export declare const extractGroupMetadata: (result: BinaryNode) => GroupMetadata;

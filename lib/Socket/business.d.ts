@@ -1,9 +1,10 @@
 /// <reference types="long" />
 /// <reference types="node" />
+/// <reference types="node" />
 import { GetCatalogOptions, ProductCreate, ProductUpdate, SocketConfig } from '../Types';
 import { BinaryNode } from '../WABinary';
 export declare const makeBusinessSocket: (config: SocketConfig) => {
-    logger: import("pino").Logger<import("pino").LoggerOptions>;
+    logger: import("../Utils/logger").ILogger;
     getOrderDetails: (orderId: string, tokenBase64: string) => Promise<import("../Types").OrderDetails>;
     getCatalog: ({ jid, limit, cursor }: GetCatalogOptions) => Promise<{
         products: import("../Types").Product[];
@@ -143,6 +144,6 @@ export declare const makeBusinessSocket: (config: SocketConfig) => {
     uploadPreKeys: (count?: number) => Promise<void>;
     uploadPreKeysToServerIfRequired: () => Promise<void>;
     requestPairingCode: (phoneNumber: string) => Promise<string>;
-    waitForConnectionUpdate: (check: (u: Partial<import("../Types").ConnectionState>) => boolean | undefined, timeoutMs?: number | undefined) => Promise<void>;
+    waitForConnectionUpdate: (check: (u: Partial<import("../Types").ConnectionState>) => Promise<boolean | undefined>, timeoutMs?: number | undefined) => Promise<void>;
     sendWAMBuffer: (wamBuffer: Buffer) => Promise<BinaryNode>;
 };

@@ -1,8 +1,8 @@
 /// <reference types="node" />
 /// <reference types="node" />
 /// <reference types="node" />
+/// <reference types="node" />
 import { AxiosRequestConfig } from 'axios';
-import type { Logger } from 'pino';
 import type { Readable } from 'stream';
 import type { URL } from 'url';
 import { proto } from '../../WAProto';
@@ -22,6 +22,7 @@ export type WALocationMessage = proto.Message.ILocationMessage;
 export type WAGenericMediaMessage = proto.Message.IVideoMessage | proto.Message.IImageMessage | proto.Message.IAudioMessage | proto.Message.IDocumentMessage | proto.Message.IStickerMessage;
 export import WAMessageStubType = proto.WebMessageInfo.StubType;
 export import WAMessageStatus = proto.WebMessageInfo.Status;
+import { ILogger } from '../Utils/logger';
 export type WAMediaPayloadURL = {
     url: URL | string;
 };
@@ -227,7 +228,7 @@ export type WAMediaUploadFunction = (readStream: Readable, opts: {
     directPath: string;
 }>;
 export type MediaGenerationOptions = {
-    logger?: Logger;
+    logger?: ILogger;
     mediaTypeOverride?: MediaType;
     upload: WAMediaUploadFunction;
     /** cache media so it does not have to be uploaded again */
