@@ -1,5 +1,3 @@
-/// <reference types="node" />
-/// <reference types="node" />
 import { AxiosRequestConfig } from 'axios';
 import type { Agent } from 'https';
 import type { URL } from 'url';
@@ -20,6 +18,9 @@ export type CacheStore = {
     del(key: string): void;
     /** flush all data */
     flushAll(): void;
+};
+export type PatchedMessageWithRecipientJID = proto.IMessage & {
+    recipientJid?: string;
 };
 export type SocketConfig = {
     /** the WS url to connect to WA */
@@ -98,7 +99,7 @@ export type SocketConfig = {
     /**
      * Optionally patch the message before sending out
      * */
-    patchMessageBeforeSending: (msg: proto.IMessage, recipientJids: string[]) => Promise<proto.IMessage> | proto.IMessage;
+    patchMessageBeforeSending: (msg: proto.IMessage, recipientJids?: string[]) => Promise<PatchedMessageWithRecipientJID[] | PatchedMessageWithRecipientJID> | PatchedMessageWithRecipientJID[] | PatchedMessageWithRecipientJID;
     /** verify app state MACs */
     appStateMacVerification: {
         patch: boolean;

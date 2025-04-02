@@ -105,7 +105,7 @@ declare const _default: (config: BaileysInMemoryStoreConfig) => {
             [id: string]: Contact;
         };
         messages: {
-            [id: string]: proto.IWebMessageInfo[];
+            [id: string]: WAMessage[];
         };
         labels: {
             [labelId: string]: Label;
