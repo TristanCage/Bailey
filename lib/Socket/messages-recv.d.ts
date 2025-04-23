@@ -58,6 +58,7 @@ export declare const makeMessagesRecvSocket: (config: SocketConfig) => {
     groupFetchAllParticipating: () => Promise<{
         [_: string]: import("../Types").GroupMetadata;
     }>;
+    getBotListV2: () => Promise<import("../Types").BotListInfo[]>;
     processingMutex: {
         mutex<T>(code: () => Promise<T> | T): Promise<T>;
     };
@@ -67,20 +68,20 @@ export declare const makeMessagesRecvSocket: (config: SocketConfig) => {
     presenceSubscribe: (toJid: string, tcToken?: Buffer) => Promise<void>;
     profilePictureUrl: (jid: string, type?: "preview" | "image", timeoutMs?: number) => Promise<string | undefined>;
     onWhatsApp: (...jids: string[]) => Promise<{
-        exists: boolean;
         jid: string;
-    }[]>;
+        exists: unknown;
+        lid: unknown;
+    }[] | undefined>;
     fetchBlocklist: () => Promise<string[]>;
-    fetchStatus: (jid: string) => Promise<{
-        status: string | undefined;
-        setAt: Date;
-    } | undefined>;
+    fetchStatus: (...jids: string[]) => Promise<import("..").USyncQueryResultList[] | undefined>;
+    fetchDisappearingDuration: (...jids: string[]) => Promise<import("..").USyncQueryResultList[] | undefined>;
     updateProfilePicture: (jid: string, content: import("../Types").WAMediaUpload) => Promise<void>;
     removeProfilePicture: (jid: string) => Promise<void>;
     updateProfileStatus: (status: string) => Promise<void>;
     updateProfileName: (name: string) => Promise<void>;
     updateBlockStatus: (jid: string, action: "block" | "unblock") => Promise<void>;
     updateCallPrivacy: (value: import("../Types").WAPrivacyCallValue) => Promise<void>;
+    updateMessagesPrivacy: (value: import("../Types").WAPrivacyMessagesValue) => Promise<void>;
     updateLastSeenPrivacy: (value: import("../Types").WAPrivacyValue) => Promise<void>;
     updateOnlinePrivacy: (value: import("../Types").WAPrivacyOnlineValue) => Promise<void>;
     updateProfilePicturePrivacy: (value: import("../Types").WAPrivacyValue) => Promise<void>;
@@ -101,6 +102,7 @@ export declare const makeMessagesRecvSocket: (config: SocketConfig) => {
         id: string;
         fromMe?: boolean;
     }[], star: boolean) => Promise<void>;
+    executeUSyncQuery: (usyncQuery: import("..").USyncQuery) => Promise<import("..").USyncQueryResult | undefined>;
     type: "md";
     ws: import("./Client").WebSocketClient;
     ev: import("../Types").BaileysEventEmitter & {

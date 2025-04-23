@@ -2,7 +2,6 @@ import { AxiosRequestConfig } from 'axios';
 import { proto } from '../../WAProto';
 import { BaileysEventEmitter, BaileysEventMap, BrowsersMap, ConnectionState, WACallUpdateType, WAVersion } from '../Types';
 import { BinaryNode } from '../WABinary';
-import { ILogger } from './logger';
 export declare const Browsers: BrowsersMap;
 export declare const getPlatformId: (browser: string) => any;
 export declare const BufferJSON: {
@@ -35,7 +34,6 @@ export declare const generateMessageIDV2: (userId?: string) => string;
 export declare const generateMessageID: () => string;
 export declare function bindWaitForEvent<T extends keyof BaileysEventMap>(ev: BaileysEventEmitter, event: T): (check: (u: BaileysEventMap[T]) => Promise<boolean | undefined>, timeoutMs?: number) => Promise<void>;
 export declare const bindWaitForConnectionUpdate: (ev: BaileysEventEmitter) => (check: (u: Partial<ConnectionState>) => Promise<boolean | undefined>, timeoutMs?: number) => Promise<void>;
-export declare const printQRIfNecessaryListener: (ev: BaileysEventEmitter, logger: ILogger) => void;
 /**
  * utility that fetches latest baileys version from the master branch.
  * Use to ensure your WA connection is always on the latest version
