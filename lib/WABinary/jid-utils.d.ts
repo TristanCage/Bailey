@@ -17,6 +17,8 @@ export declare const jidEncode: (user: string | number | null, server: JidServer
 export declare const jidDecode: (jid: string | undefined) => FullJid | undefined;
 /** is the jid a user */
 export declare const areJidsSameUser: (jid1: string | undefined, jid2: string | undefined) => boolean;
+/** is the jid Meta IA */
+export declare const isJidMetaIa: (jid: string | undefined) => boolean | undefined;
 /** is the jid a user */
 export declare const isJidUser: (jid: string | undefined) => boolean | undefined;
 /** is the jid a group */
