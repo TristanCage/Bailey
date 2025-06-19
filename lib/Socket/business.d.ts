@@ -60,7 +60,7 @@ export declare const makeBusinessSocket: (config: SocketConfig) => {
     groupRevokeInvite: (jid: string) => Promise<string | undefined>;
     groupAcceptInvite: (code: string) => Promise<string | undefined>;
     groupRevokeInviteV4: (groupJid: string, invitedJid: string) => Promise<boolean>;
-    groupAcceptInviteV4: (key: string | import("../Types").WAProto.IMessageKey, inviteMessage: import("../Types").WAProto.Message.IGroupInviteMessage) => Promise<any>;
+    groupAcceptInviteV4: (key: string | import("../Types").WAMessageKey, inviteMessage: import("../Types").WAProto.Message.IGroupInviteMessage) => Promise<any>;
     groupGetInviteInfo: (code: string) => Promise<import("../Types").GroupMetadata>;
     groupToggleEphemeral: (jid: string, ephemeralExpiration: number) => Promise<void>;
     groupSettingUpdate: (jid: string, setting: "announcement" | "not_announcement" | "locked" | "unlocked") => Promise<void>;
@@ -101,7 +101,7 @@ export declare const makeBusinessSocket: (config: SocketConfig) => {
     updateGroupsAddPrivacy: (value: import("../Types").WAPrivacyGroupAddValue) => Promise<void>;
     updateDefaultDisappearingMode: (duration: number) => Promise<void>;
     getBusinessProfile: (jid: string) => Promise<import("../Types").WABusinessProfile | void>;
-    resyncAppState: (collections: readonly ("critical_block" | "critical_unblock_low" | "regular_high" | "regular_low" | "regular")[], isInitialSync: boolean) => Promise<void>;
+    resyncAppState: (collections: readonly ("critical_unblock_low" | "regular_high" | "regular_low" | "critical_block" | "regular")[], isInitialSync: boolean) => Promise<void>;
     chatModify: (mod: import("../Types").ChatModification, jid: string) => Promise<void>;
     cleanDirtyBits: (type: "account_sync" | "groups", fromTimestamp?: number | string) => Promise<void>;
     addLabel: (jid: string, labels: import("../Types/Label").LabelActionBody) => Promise<void>;
@@ -117,9 +117,9 @@ export declare const makeBusinessSocket: (config: SocketConfig) => {
     type: "md";
     ws: import("./Client").WebSocketClient;
     ev: import("../Types").BaileysEventEmitter & {
-        process(handler: (events: Partial<import("../Types").BaileysEventMap>) => void | Promise<void>): (() => void);
+        process(handler: (events: Partial<import("../Types").BaileysEventMap>) => void | Promise<void>): () => void;
         buffer(): void;
-        createBufferedFunction<A extends any[], T>(work: (...args: A) => Promise<T>): ((...args: A) => Promise<T>);
+        createBufferedFunction<A extends any[], T>(work: (...args: A) => Promise<T>): (...args: A) => Promise<T>;
         flush(force?: boolean): boolean;
         isBuffering(): boolean;
     };

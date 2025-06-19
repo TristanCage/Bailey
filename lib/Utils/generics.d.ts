@@ -81,7 +81,7 @@ export declare const getCodeFromWSError: (error: Error) => number;
  * Is the given platform WA business
  * @param platform AuthenticationCreds.platform
  */
-export declare const isWABusinessPlatform: (platform: string) => platform is "smbi" | "smba";
+export declare const isWABusinessPlatform: (platform: string) => platform is "smba" | "smbi";
 export declare function trimUndefined(obj: {
     [_: string]: any;
 }): {
