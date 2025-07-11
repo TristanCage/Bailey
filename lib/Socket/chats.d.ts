@@ -1,6 +1,6 @@
 import { Boom } from '@hapi/boom';
 import { proto } from '../../WAProto';
-import { BotListInfo, ChatModification, MessageUpsertType, SocketConfig, WABusinessProfile, WAMediaUpload, WAPatchCreate, WAPresence, WAPrivacyCallValue, WAPrivacyGroupAddValue, WAPrivacyMessagesValue, WAPrivacyOnlineValue, WAPrivacyValue, WAReadReceiptsValue } from '../Types';
+import { BotListInfo, ChatModification, MessageUpsertType, SocketConfig, WABusinessProfile, WAMediaUpload, WAMessage, WAPatchCreate, WAPresence, WAPrivacyCallValue, WAPrivacyGroupAddValue, WAPrivacyMessagesValue, WAPrivacyOnlineValue, WAPrivacyValue, WAReadReceiptsValue } from '../Types';
 import { LabelActionBody } from '../Types/Label';
 import { BinaryNode } from '../WABinary';
 import { USyncQuery } from '../WAUSync';
@@ -12,7 +12,7 @@ export declare const makeChatsSocket: (config: SocketConfig) => {
     fetchPrivacySettings: (force?: boolean) => Promise<{
         [_: string]: string;
     }>;
-    upsertMessage: (msg: proto.IWebMessageInfo, type: MessageUpsertType) => Promise<void>;
+    upsertMessage: (msg: WAMessage, type: MessageUpsertType) => Promise<void>;
     appPatch: (patchCreate: WAPatchCreate) => Promise<void>;
     sendPresenceUpdate: (type: WAPresence, toJid?: string) => Promise<void>;
     presenceSubscribe: (toJid: string, tcToken?: Buffer) => Promise<void>;
@@ -25,7 +25,10 @@ export declare const makeChatsSocket: (config: SocketConfig) => {
     fetchBlocklist: () => Promise<string[]>;
     fetchStatus: (...jids: string[]) => Promise<import("../WAUSync").USyncQueryResultList[] | undefined>;
     fetchDisappearingDuration: (...jids: string[]) => Promise<import("../WAUSync").USyncQueryResultList[] | undefined>;
-    updateProfilePicture: (jid: string, content: WAMediaUpload) => Promise<void>;
+    updateProfilePicture: (jid: string, content: WAMediaUpload, dimensions?: {
+        width: number;
+        height: number;
+    }) => Promise<void>;
     removeProfilePicture: (jid: string) => Promise<void>;
     updateProfileStatus: (status: string) => Promise<void>;
     updateProfileName: (name: string) => Promise<void>;
@@ -43,6 +46,8 @@ export declare const makeChatsSocket: (config: SocketConfig) => {
     resyncAppState: (collections: readonly ("critical_unblock_low" | "regular_high" | "regular_low" | "critical_block" | "regular")[], isInitialSync: boolean) => Promise<void>;
     chatModify: (mod: ChatModification, jid: string) => Promise<void>;
     cleanDirtyBits: (type: "account_sync" | "groups", fromTimestamp?: number | string) => Promise<void>;
+    addOrEditContact: (jid: string, contact: proto.SyncActionValue.IContactAction) => Promise<void>;
+    removeContact: (jid: string) => Promise<void>;
     addLabel: (jid: string, labels: LabelActionBody) => Promise<void>;
     addChatLabel: (jid: string, labelId: string) => Promise<void>;
     removeChatLabel: (jid: string, labelId: string) => Promise<void>;
@@ -79,7 +84,7 @@ export declare const makeChatsSocket: (config: SocketConfig) => {
     onUnexpectedError: (err: Error | Boom, msg: string) => void;
     uploadPreKeys: (count?: number) => Promise<void>;
     uploadPreKeysToServerIfRequired: () => Promise<void>;
-    requestPairingCode: (phoneNumber: string) => Promise<string>;
+    requestPairingCode: (phoneNumber: string, customPairingCode?: string) => Promise<string>;
     waitForConnectionUpdate: (check: (u: Partial<import("../Types").ConnectionState>) => Promise<boolean | undefined>, timeoutMs?: number) => Promise<void>;
     sendWAMBuffer: (wamBuffer: Buffer) => Promise<any>;
 };

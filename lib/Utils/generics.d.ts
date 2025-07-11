@@ -88,3 +88,4 @@ export declare function trimUndefined(obj: {
     [_: string]: any;
 };
 export declare function bytesToCrockford(buffer: Buffer): string;
+export declare function encodeNewsletterMessage(message: proto.IMessage): Uint8Array;

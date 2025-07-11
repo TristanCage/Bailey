@@ -68,6 +68,7 @@ export type ChatModification = {
     mute: number | null;
 } | {
     clear: boolean;
+    lastMessages: LastMessageList;
 } | {
     deleteForMe: {
         deleteMedia: boolean;
@@ -88,6 +89,8 @@ export type ChatModification = {
 } | {
     delete: true;
     lastMessages: LastMessageList;
+} | {
+    contact: proto.SyncActionValue.IContactAction | null;
 } | {
     addLabel: LabelActionBody;
 } | {

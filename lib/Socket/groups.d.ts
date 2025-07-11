@@ -50,7 +50,7 @@ export declare const makeGroupsSocket: (config: SocketConfig) => {
     fetchPrivacySettings: (force?: boolean) => Promise<{
         [_: string]: string;
     }>;
-    upsertMessage: (msg: proto.IWebMessageInfo, type: import("../Types").MessageUpsertType) => Promise<void>;
+    upsertMessage: (msg: import("../Types").WAMessage, type: import("../Types").MessageUpsertType) => Promise<void>;
     appPatch: (patchCreate: import("../Types").WAPatchCreate) => Promise<void>;
     sendPresenceUpdate: (type: import("../Types").WAPresence, toJid?: string) => Promise<void>;
     presenceSubscribe: (toJid: string, tcToken?: Buffer) => Promise<void>;
@@ -63,7 +63,10 @@ export declare const makeGroupsSocket: (config: SocketConfig) => {
     fetchBlocklist: () => Promise<string[]>;
     fetchStatus: (...jids: string[]) => Promise<import("..").USyncQueryResultList[] | undefined>;
     fetchDisappearingDuration: (...jids: string[]) => Promise<import("..").USyncQueryResultList[] | undefined>;
-    updateProfilePicture: (jid: string, content: import("../Types").WAMediaUpload) => Promise<void>;
+    updateProfilePicture: (jid: string, content: import("../Types").WAMediaUpload, dimensions?: {
+        width: number;
+        height: number;
+    }) => Promise<void>;
     removeProfilePicture: (jid: string) => Promise<void>;
     updateProfileStatus: (status: string) => Promise<void>;
     updateProfileName: (name: string) => Promise<void>;
@@ -81,6 +84,8 @@ export declare const makeGroupsSocket: (config: SocketConfig) => {
     resyncAppState: (collections: readonly ("critical_unblock_low" | "regular_high" | "regular_low" | "critical_block" | "regular")[], isInitialSync: boolean) => Promise<void>;
     chatModify: (mod: import("../Types").ChatModification, jid: string) => Promise<void>;
     cleanDirtyBits: (type: "account_sync" | "groups", fromTimestamp?: number | string) => Promise<void>;
+    addOrEditContact: (jid: string, contact: proto.SyncActionValue.IContactAction) => Promise<void>;
+    removeContact: (jid: string) => Promise<void>;
     addLabel: (jid: string, labels: import("../Types/Label").LabelActionBody) => Promise<void>;
     addChatLabel: (jid: string, labelId: string) => Promise<void>;
     removeChatLabel: (jid: string, labelId: string) => Promise<void>;
@@ -117,8 +122,9 @@ export declare const makeGroupsSocket: (config: SocketConfig) => {
     onUnexpectedError: (err: Error | import("@hapi/boom").Boom, msg: string) => void;
     uploadPreKeys: (count?: number) => Promise<void>;
     uploadPreKeysToServerIfRequired: () => Promise<void>;
-    requestPairingCode: (phoneNumber: string) => Promise<string>;
+    requestPairingCode: (phoneNumber: string, customPairingCode?: string) => Promise<string>;
     waitForConnectionUpdate: (check: (u: Partial<import("../Types").ConnectionState>) => Promise<boolean | undefined>, timeoutMs?: number) => Promise<void>;
     sendWAMBuffer: (wamBuffer: Buffer) => Promise<any>;
 };
 export declare const extractGroupMetadata: (result: BinaryNode) => GroupMetadata;
+export type GroupsSocket = ReturnType<typeof makeGroupsSocket>;

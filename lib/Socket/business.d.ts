@@ -39,6 +39,29 @@ export declare const makeBusinessSocket: (config: SocketConfig) => {
     getUSyncDevices: (jids: string[], useCache: boolean, ignoreZeroDevices: boolean) => Promise<import("../WABinary").JidWithDevice[]>;
     updateMediaMessage: (message: import("../Types").WAProto.IWebMessageInfo) => Promise<import("../Types").WAProto.IWebMessageInfo>;
     sendMessage: (jid: string, content: import("../Types").AnyMessageContent, options?: import("../Types").MiscMessageGenerationOptions) => Promise<import("../Types").WAProto.WebMessageInfo | undefined>;
+    newsletterCreate: (name: string, description?: string) => Promise<import("../Types").NewsletterMetadata>;
+    newsletterUpdate: (jid: string, updates: import("../Types").NewsletterUpdate) => Promise<unknown>;
+    newsletterSubscribers: (jid: string) => Promise<{
+        subscribers: number;
+    }>;
+    newsletterMetadata: (type: "invite" | "jid", key: string) => Promise<import("../Types").NewsletterMetadata | null>;
+    newsletterFollow: (jid: string) => Promise<unknown>;
+    newsletterUnfollow: (jid: string) => Promise<unknown>;
+    newsletterMute: (jid: string) => Promise<unknown>;
+    newsletterUnmute: (jid: string) => Promise<unknown>;
+    newsletterUpdateName: (jid: string, name: string) => Promise<unknown>;
+    newsletterUpdateDescription: (jid: string, description: string) => Promise<unknown>;
+    newsletterUpdatePicture: (jid: string, content: import("../Types").WAMediaUpload) => Promise<unknown>;
+    newsletterRemovePicture: (jid: string) => Promise<unknown>;
+    newsletterReactMessage: (jid: string, serverId: string, reaction?: string) => Promise<void>;
+    newsletterFetchMessages: (jid: string, count: number, since: number, after: number) => Promise<any>;
+    subscribeNewsletterUpdates: (jid: string) => Promise<{
+        duration: string;
+    } | null>;
+    newsletterAdminCount: (jid: string) => Promise<number>;
+    newsletterChangeOwner: (jid: string, newOwnerJid: string) => Promise<void>;
+    newsletterDemote: (jid: string, userJid: string) => Promise<void>;
+    newsletterDelete: (jid: string) => Promise<void>;
     groupMetadata: (jid: string) => Promise<import("../Types").GroupMetadata>;
     groupCreate: (subject: string, participants: string[]) => Promise<import("../Types").GroupMetadata>;
     groupLeave: (id: string) => Promise<void>;
@@ -73,7 +96,7 @@ export declare const makeBusinessSocket: (config: SocketConfig) => {
     processingMutex: {
         mutex<T>(code: () => Promise<T> | T): Promise<T>;
     };
-    upsertMessage: (msg: import("../Types").WAProto.IWebMessageInfo, type: import("../Types").MessageUpsertType) => Promise<void>;
+    upsertMessage: (msg: import("../Types").WAMessage, type: import("../Types").MessageUpsertType) => Promise<void>;
     appPatch: (patchCreate: import("../Types").WAPatchCreate) => Promise<void>;
     sendPresenceUpdate: (type: import("../Types").WAPresence, toJid?: string) => Promise<void>;
     presenceSubscribe: (toJid: string, tcToken?: Buffer) => Promise<void>;
@@ -86,7 +109,10 @@ export declare const makeBusinessSocket: (config: SocketConfig) => {
     fetchBlocklist: () => Promise<string[]>;
     fetchStatus: (...jids: string[]) => Promise<import("..").USyncQueryResultList[] | undefined>;
     fetchDisappearingDuration: (...jids: string[]) => Promise<import("..").USyncQueryResultList[] | undefined>;
-    updateProfilePicture: (jid: string, content: import("../Types").WAMediaUpload) => Promise<void>;
+    updateProfilePicture: (jid: string, content: import("../Types").WAMediaUpload, dimensions?: {
+        width: number;
+        height: number;
+    }) => Promise<void>;
     removeProfilePicture: (jid: string) => Promise<void>;
     updateProfileStatus: (status: string) => Promise<void>;
     updateProfileName: (name: string) => Promise<void>;
@@ -104,6 +130,8 @@ export declare const makeBusinessSocket: (config: SocketConfig) => {
     resyncAppState: (collections: readonly ("critical_unblock_low" | "regular_high" | "regular_low" | "critical_block" | "regular")[], isInitialSync: boolean) => Promise<void>;
     chatModify: (mod: import("../Types").ChatModification, jid: string) => Promise<void>;
     cleanDirtyBits: (type: "account_sync" | "groups", fromTimestamp?: number | string) => Promise<void>;
+    addOrEditContact: (jid: string, contact: import("../Types").WAProto.SyncActionValue.IContactAction) => Promise<void>;
+    removeContact: (jid: string) => Promise<void>;
     addLabel: (jid: string, labels: import("../Types/Label").LabelActionBody) => Promise<void>;
     addChatLabel: (jid: string, labelId: string) => Promise<void>;
     removeChatLabel: (jid: string, labelId: string) => Promise<void>;
@@ -140,7 +168,7 @@ export declare const makeBusinessSocket: (config: SocketConfig) => {
     onUnexpectedError: (err: Error | import("@hapi/boom").Boom, msg: string) => void;
     uploadPreKeys: (count?: number) => Promise<void>;
     uploadPreKeysToServerIfRequired: () => Promise<void>;
-    requestPairingCode: (phoneNumber: string) => Promise<string>;
+    requestPairingCode: (phoneNumber: string, customPairingCode?: string) => Promise<string>;
     waitForConnectionUpdate: (check: (u: Partial<import("../Types").ConnectionState>) => Promise<boolean | undefined>, timeoutMs?: number) => Promise<void>;
     sendWAMBuffer: (wamBuffer: Buffer) => Promise<any>;
 };
