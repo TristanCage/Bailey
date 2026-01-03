@@ -1,10 +1,11 @@
-import type { proto } from '../../WAProto';
-import type { AccountSettings } from './Auth';
-import type { BufferedEventData } from './Events';
-import type { LabelActionBody } from './Label';
-import type { ChatLabelAssociationActionBody } from './LabelAssociation';
-import type { MessageLabelAssociationActionBody } from './LabelAssociation';
-import type { MinimalMessage, WAMessageKey } from './Message';
+import type { proto } from '../../WAProto/index.js';
+import type { AccountSettings } from './Auth.js';
+import type { QuickReplyAction } from './Bussines.js';
+import type { BufferedEventData } from './Events.js';
+import type { LabelActionBody } from './Label.js';
+import type { ChatLabelAssociationActionBody } from './LabelAssociation.js';
+import type { MessageLabelAssociationActionBody } from './LabelAssociation.js';
+import type { MinimalMessage, WAMessageKey } from './Message.js';
 /** privacy settings in WhatsApp Web */
 export type WAPrivacyValue = 'all' | 'contacts' | 'contact_blacklist' | 'none';
 export type WAPrivacyOnlineValue = 'all' | 'match_last_seen';
@@ -50,6 +51,8 @@ export type ChatUpdate = Partial<Chat & {
      * undefined if the condition is not yet fulfilled
      * */
     conditional: (bufferedData: BufferedEventData) => boolean | undefined;
+    /** last update time */
+    timestamp?: number;
 }>;
 /**
  * the last messages in a chat, sorted reverse-chronologically. That is, the latest message should be first in the chat
@@ -92,6 +95,8 @@ export type ChatModification = {
 } | {
     contact: proto.SyncActionValue.IContactAction | null;
 } | {
+    disableLinkPreviews: proto.SyncActionValue.IPrivacySettingDisableLinkPreviewsAction;
+} | {
     addLabel: LabelActionBody;
 } | {
     addChatLabel: ChatLabelAssociationActionBody;
@@ -101,6 +106,8 @@ export type ChatModification = {
     addMessageLabel: MessageLabelAssociationActionBody;
 } | {
     removeMessageLabel: MessageLabelAssociationActionBody;
+} | {
+    quickReply: QuickReplyAction;
 };
 export type InitialReceivedChatsState = {
     [jid: string]: {
@@ -113,3 +120,4 @@ export type InitialReceivedChatsState = {
 export type InitialAppStateSyncOptions = {
     accountSettings: AccountSettings;
 };
+//# sourceMappingURL=Chat.d.ts.map
