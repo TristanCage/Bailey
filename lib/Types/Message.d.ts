@@ -266,6 +266,7 @@ export type MediaGenerationOptions = {
     options?: RequestInit;
     backgroundColor?: string;
     font?: number;
+    workerPool?: any;
 };
 export type MessageContentGenerationOptions = MediaGenerationOptions & {
     getUrlInfo?: (text: string) => Promise<WAUrlInfo | undefined>;

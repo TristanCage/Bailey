@@ -16,4 +16,6 @@ export * from './event-buffer.js';
 export * from './process-message.js';
 export * from './message-retry-manager.js';
 export * from './browser-utils.js';
+export * from './make-mutex.js';
+export * from './worker-pool.js';
 //# sourceMappingURL=index.d.ts.map

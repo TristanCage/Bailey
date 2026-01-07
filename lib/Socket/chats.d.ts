@@ -82,6 +82,10 @@ export declare const makeChatsSocket: (config: SocketConfig) => {
         keys: import("../Types/index.js").SignalKeyStoreWithTransaction;
     };
     signalRepository: import("../Types/index.js").SignalRepositoryWithLIDStore;
+    workerPool: {
+        execute<T>(task: import("../Utils/index.js").WorkerTask, transferList?: any[]): Promise<T>;
+        destroy(): void;
+    } | undefined;
     user: import("../Types/index.js").Contact | undefined;
     generateMessageTag: () => string;
     query: (node: BinaryNode, timeoutMs?: number) => Promise<any>;

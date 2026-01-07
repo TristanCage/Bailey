@@ -130,6 +130,10 @@ export declare const makeNewsletterSocket: (config: SocketConfig) => {
         keys: import("../index.js").SignalKeyStoreWithTransaction;
     };
     signalRepository: import("../index.js").SignalRepositoryWithLIDStore;
+    workerPool: {
+        execute<T>(task: import("../index.js").WorkerTask, transferList?: any[]): Promise<T>;
+        destroy(): void;
+    } | undefined;
     user: import("../index.js").Contact | undefined;
     generateMessageTag: () => string;
     query: (node: import("../index.js").BinaryNode, timeoutMs?: number) => Promise<any>;

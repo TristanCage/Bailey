@@ -2,6 +2,7 @@ import type { WAMessage } from '../Types/index.js';
 import type { SignalRepositoryWithLIDStore } from '../Types/Signal.js';
 import { type BinaryNode } from '../WABinary/index.js';
 import type { ILogger } from './logger.js';
+import type { WorkerPool } from './worker-pool.js';
 export declare const getDecryptionJid: (sender: string, repository: SignalRepositoryWithLIDStore) => Promise<string>;
 export declare const NO_MESSAGE_FOUND_ERROR_TEXT = "Message absent from node";
 export declare const MISSING_KEYS_ERROR_TEXT = "Key used already or never filled";
@@ -39,7 +40,7 @@ export declare function decodeMessageNode(stanza: BinaryNode, meId: string, meLi
     author: string;
     sender: string;
 };
-export declare const decryptMessageNode: (stanza: BinaryNode, meId: string, meLid: string, repository: SignalRepositoryWithLIDStore, logger: ILogger) => {
+export declare const decryptMessageNode: (stanza: BinaryNode, meId: string, meLid: string, repository: SignalRepositoryWithLIDStore, logger: ILogger, workerPool?: WorkerPool) => {
     fullMessage: WAMessage;
     category: string | undefined;
     author: string;

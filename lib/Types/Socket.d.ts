@@ -38,6 +38,8 @@ export type SocketConfig = {
     defaultQueryTimeoutMs: number | undefined;
     /** ping-pong interval for WS connection */
     keepAliveIntervalMs: number;
+    /** timeout for ping-pong response */
+    pingTimeoutMs?: number;
     /** should baileys use the mobile api instead of the multi device api
      * @deprecated This feature has been removed
      */
@@ -103,6 +105,10 @@ export type SocketConfig = {
     enableAutoSessionRecreation: boolean;
     /** Enable recent message caching for retry handling */
     enableRecentMessageCache: boolean;
+    /** Enable persistent decryption buffer to protect against ratchet out-of-sync errors */
+    enableDecryptionBuffer: boolean;
+    /** Provide a cache to store decrypted plaintexts by ciphertext hash */
+    decryptionBuffer?: CacheStore;
     /**
      * Returns if a jid should be ignored,
      * no event for that jid will be triggered.
@@ -129,5 +135,33 @@ export type SocketConfig = {
     /** cached group metadata, use to prevent redundant requests to WA & speed up msg sending */
     cachedGroupMetadata: (jid: string) => Promise<GroupMetadata | undefined>;
     makeSignalRepository: (auth: SignalAuthState, logger: ILogger, pnToLIDFunc?: (jids: string[]) => Promise<LIDMapping[] | undefined>) => SignalRepositoryWithLIDStore;
+    /**
+     * Max size of the node processing queue.
+     * Bursts of nodes (like offline messages) will be absorbed up to this size
+     * before the socket starts dropping or blocking.
+     * Default: 2048 (inspired by whatsmeow)
+     * */
+    handlerQueueSize: number;
+    /**
+     * Max concurrency of the node processing queue.
+     * Allows processing multiple nodes in parallel while respecting per-jid mutexes.
+     * Default: 1
+     * */
+    handlerConcurrency?: number;
+    /**
+     * Should Baileys use worker threads for CPU-intensive tasks like Protobuf decoding?
+     * Useful for high-traffic bots.
+     * Default: false
+     * */
+    useWorker?: boolean;
+    /**
+     * Number of worker threads to spawn.
+     * Default: number of CPUS or 4
+     * */
+    workerCount?: number;
+    /**
+     * Internal worker pool instance.
+     */
+    workerPool?: any;
 };
 //# sourceMappingURL=Socket.d.ts.map

@@ -44,7 +44,7 @@ export declare class MessageRetryManager {
     /**
      * Check if a session should be recreated based on retry count and history
      */
-    shouldRecreateSession(jid: string, retryCount: number, hasSession: boolean): {
+    shouldRecreateSession(jid: string, retryCount: number, hasSession: boolean, error?: any): {
         reason: string;
         recreate: boolean;
     };
