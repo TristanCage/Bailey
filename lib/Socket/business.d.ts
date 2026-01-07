@@ -173,10 +173,6 @@ export declare const makeBusinessSocket: (config: SocketConfig) => {
         keys: import("../index.js").SignalKeyStoreWithTransaction;
     };
     signalRepository: import("../index.js").SignalRepositoryWithLIDStore;
-    workerPool: {
-        execute<T>(task: import("../index.js").WorkerTask, transferList?: any[]): Promise<T>;
-        destroy(): void;
-    } | undefined;
     user: import("../index.js").Contact | undefined;
     generateMessageTag: () => string;
     query: (node: BinaryNode, timeoutMs?: number) => Promise<any>;

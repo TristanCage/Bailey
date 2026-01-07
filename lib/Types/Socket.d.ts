@@ -148,20 +148,5 @@ export type SocketConfig = {
      * Default: 1
      * */
     handlerConcurrency?: number;
-    /**
-     * Should Baileys use worker threads for CPU-intensive tasks like Protobuf decoding?
-     * Useful for high-traffic bots.
-     * Default: false
-     * */
-    useWorker?: boolean;
-    /**
-     * Number of worker threads to spawn.
-     * Default: number of CPUS or 4
-     * */
-    workerCount?: number;
-    /**
-     * Internal worker pool instance.
-     */
-    workerPool?: any;
 };
 //# sourceMappingURL=Socket.d.ts.map
