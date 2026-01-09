@@ -9,13 +9,6 @@ import type { Label } from './Label.js';
 import type { LabelAssociation } from './LabelAssociation.js';
 import type { MessageUpsertType, MessageUserReceiptUpdate, WAMessage, WAMessageKey, WAMessageUpdate } from './Message.js';
 import type { ConnectionState } from './State.js';
-export type UndecryptableMessage = {
-    info: WAMessageKey;
-    isUnavailable?: boolean;
-    unavailableType?: string | null;
-    decryptFailMode?: string | null;
-    registrationId?: number;
-};
 export type BaileysEventMap = {
     /** connection state has been updated -- WS closed, opened, connecting etc. */
     'connection.update': Partial<ConnectionState>;
@@ -177,8 +170,64 @@ export type BaileysEventMap = {
         setting: 'channelsPersonalisedRecommendation';
         value: proto.SyncActionValue.IPrivacySettingChannelsPersonalisedRecommendationAction;
     };
-    /** undecryptable message update */
-    'undecryptable-message.update': UndecryptableMessage;
+};
+export type BufferedEventData = {
+    historySets: {
+        chats: {
+            [jid: string]: Chat;
+        };
+        contacts: {
+            [jid: string]: Contact;
+        };
+        messages: {
+            [uqId: string]: WAMessage;
+        };
+        empty: boolean;
+        isLatest: boolean;
+        progress?: number | null;
+        syncType?: proto.HistorySync.HistorySyncType;
+        peerDataRequestSessionId?: string;
+    };
+    chatUpserts: {
+        [jid: string]: Chat;
+    };
+    chatUpdates: {
+        [jid: string]: ChatUpdate;
+    };
+    chatDeletes: Set<string>;
+    contactUpserts: {
+        [jid: string]: Contact;
+    };
+    contactUpdates: {
+        [jid: string]: Partial<Contact>;
+    };
+    messageUpserts: {
+        [key: string]: {
+            type: MessageUpsertType;
+            message: WAMessage;
+        };
+    };
+    messageUpdates: {
+        [key: string]: WAMessageUpdate;
+    };
+    messageDeletes: {
+        [key: string]: WAMessageKey;
+    };
+    messageReactions: {
+        [key: string]: {
+            key: WAMessageKey;
+            reactions: proto.IReaction[];
+        };
+    };
+    messageReceipts: {
+        [key: string]: {
+            key: WAMessageKey;
+            userReceipt: proto.IUserReceipt[];
+        };
+    };
+    groupUpdates: {
+        [jid: string]: Partial<GroupMetadata>;
+    };
 };
 export type BaileysEvent = keyof BaileysEventMap;
 export interface BaileysEventEmitter {

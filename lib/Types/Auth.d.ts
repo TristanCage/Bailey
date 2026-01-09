@@ -94,13 +94,6 @@ export type SignalKeyStore = {
     set(data: SignalDataSet): Awaitable<void>;
     /** clear all the data in the store */
     clear?(): Awaitable<void>;
-    /**
-     * transaction wrapper for the store
-     * @param exec the work to execute in a transaction
-     * @param key the key to lock for the transaction
-     * @returns the result of the work
-     * */
-    transaction?<T>(exec: () => Promise<T>, key?: string): Promise<T>;
 };
 export type SignalKeyStoreWithTransaction = SignalKeyStore & {
     isInTransaction: () => boolean;

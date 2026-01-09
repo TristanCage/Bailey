@@ -10,7 +10,7 @@ import type { ILogger } from './logger.js';
 export declare const hkdfInfoKey: (type: MediaType) => string;
 export declare const getRawMediaUploadData: (media: WAMediaUpload, mediaType: MediaType, logger?: ILogger) => Promise<{
     filePath: string;
-    fileSha256: NonSharedBuffer;
+    fileSha256: Buffer<ArrayBufferLike>;
     fileLength: number;
 }>;
 /** generates all the keys required to encrypt/decrypt & sign a media message */
@@ -31,13 +31,13 @@ export declare const generateProfilePicture: (mediaUpload: WAMediaUpload, dimens
 }>;
 /** gets the SHA256 of the given media message */
 export declare const mediaMessageSHA256B64: (message: WAMessageContent) => string | null | undefined;
-export declare function getAudioDuration(buffer: Buffer | string | Readable): Promise<number | undefined>;
+export declare function getAudioDuration(buffer: Buffer | string | Readable | ReadableStream): Promise<number | undefined>;
 /**
   referenced from and modifying https://github.com/wppconnect-team/wa-js/blob/main/src/chat/functions/prepareAudioWaveform.ts
  */
-export declare function getAudioWaveform(buffer: Buffer | string | Readable, logger?: ILogger): Promise<Uint8Array<ArrayBuffer> | undefined>;
+export declare function getAudioWaveform(buffer: Buffer | string | Readable | ReadableStream, logger?: ILogger): Promise<Uint8Array<ArrayBuffer> | undefined>;
 export declare const toReadable: (buffer: Buffer) => Readable;
-export declare const toBuffer: (stream: Readable) => Promise<Buffer<ArrayBuffer>>;
+export declare const toBuffer: (stream: Readable | ReadableStream) => Promise<Buffer<ArrayBuffer>>;
 export declare const getStream: (item: WAMediaUpload, opts?: RequestInit & {
     maxContentLength?: number;
 }) => Promise<{
@@ -72,10 +72,10 @@ type EncryptedStreamOptions = {
     opts?: RequestInit;
 };
 export declare const encryptedStream: (media: WAMediaUpload, mediaType: MediaType, { logger, saveOriginalFileIfRequired, opts }?: EncryptedStreamOptions) => Promise<{
-    mediaKey: NonSharedBuffer;
+    mediaKey: Buffer<ArrayBufferLike>;
     originalFilePath: string | undefined;
     encFilePath: string;
-    mac: Buffer<ArrayBufferLike>;
+    mac: Buffer<ArrayBuffer>;
     fileEncSha256: Buffer<ArrayBufferLike>;
     fileSha256: Buffer<ArrayBufferLike>;
     fileLength: number;
@@ -91,7 +91,7 @@ export declare const downloadContentFromMessage: ({ mediaKey, directPath, url }:
  * Decrypts and downloads an AES256-CBC encrypted file given the keys.
  * Assumes the SHA256 of the plaintext is appended to the end of the ciphertext
  * */
-export declare const downloadEncryptedContent: (downloadUrl: string, { cipherKey, iv, macKey }: MediaDecryptionKeyInfo, { startByte, endByte, options }?: MediaDownloadOptions) => Promise<Transform>;
+export declare const downloadEncryptedContent: (downloadUrl: string, { cipherKey, iv }: MediaDecryptionKeyInfo, { startByte, endByte, options }?: MediaDownloadOptions) => Promise<Transform>;
 export declare function extensionForMediaMessage(message: WAMessageContent): string;
 type MediaUploadResult = {
     url?: string;

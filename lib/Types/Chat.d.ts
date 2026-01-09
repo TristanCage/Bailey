@@ -1,6 +1,7 @@
 import type { proto } from '../../WAProto/index.js';
 import type { AccountSettings } from './Auth.js';
 import type { QuickReplyAction } from './Bussines.js';
+import type { BufferedEventData } from './Events.js';
 import type { LabelActionBody } from './Label.js';
 import type { ChatLabelAssociationActionBody } from './LabelAssociation.js';
 import type { MessageLabelAssociationActionBody } from './LabelAssociation.js';
@@ -40,6 +41,16 @@ export type Chat = proto.IConversation & {
     lastMessageRecvTimestamp?: number;
 };
 export type ChatUpdate = Partial<Chat & {
+    /**
+     * if specified in the update,
+     * the EV buffer will check if the condition gets fulfilled before applying the update
+     * Right now, used to determine when to release an app state sync event
+     *
+     * @returns true, if the update should be applied;
+     * false if it can be discarded;
+     * undefined if the condition is not yet fulfilled
+     * */
+    conditional: (bufferedData: BufferedEventData) => boolean | undefined;
     /** last update time */
     timestamp?: number;
 }>;
