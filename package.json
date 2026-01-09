@@ -24,14 +24,12 @@
     "@cacheable/node-cache": "^1.4.0",
     "@hapi/boom": "^9.1.3",
     "async-mutex": "^0.5.0",
-    "json5": "^2.2.3",
-    "libsignal": "git+https://github.com/whiskeysockets/libsignal-node#master",
+    "libsignal": "git+https://github.com/whiskeysockets/libsignal-node",
     "lru-cache": "^11.1.0",
     "music-metadata": "^11.7.0",
     "p-queue": "^9.0.0",
     "pino": "^9.6",
     "protobufjs": "^7.2.4",
-    "sharp": "0.32.0",
     "ws": "^8.13.0"
   },
   "devDependencies": {
@@ -45,7 +43,6 @@
     "@whiskeysockets/eslint-config": "^1.0.0",
     "conventional-changelog": "^7.1.1",
     "conventional-changelog-angular": "^8.0.0",
-    "esbuild": "^0.27.2",
     "esbuild-register": "^3.6.0",
     "eslint": "^9",
     "eslint-config-prettier": "^10.1.2",
@@ -71,7 +68,8 @@
   "peerDependencies": {
     "audio-decode": "^2.1.3",
     "jimp": "^1.6.0",
-    "link-preview-js": "^3.0.0"
+    "link-preview-js": "^3.0.0",
+    "sharp": "*"
   },
   "peerDependenciesMeta": {
     "audio-decode": {

@@ -129,5 +129,13 @@ export type SocketConfig = {
     /** cached group metadata, use to prevent redundant requests to WA & speed up msg sending */
     cachedGroupMetadata: (jid: string) => Promise<GroupMetadata | undefined>;
     makeSignalRepository: (auth: SignalAuthState, logger: ILogger, pnToLIDFunc?: (jids: string[]) => Promise<LIDMapping[] | undefined>) => SignalRepositoryWithLIDStore;
+    /**
+     * handler concurrency (default: 1)
+     * */
+    handlerConcurrency?: number;
+    /**
+     * handler queue size (default: 2048)
+     * */
+    handlerQueueSize?: number;
 };
 //# sourceMappingURL=Socket.d.ts.map
