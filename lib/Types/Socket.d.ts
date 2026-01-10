@@ -109,6 +109,8 @@ export type SocketConfig = {
      * Messages from that jid will also not be decrypted
      * */
     shouldIgnoreJid: (jid: string) => boolean | undefined;
+    /** should ignore offline messages (default: true) */
+    ignoreOfflineMessages: boolean;
     /**
      * Optionally patch the message before sending out
      * */

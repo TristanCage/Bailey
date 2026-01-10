@@ -15,7 +15,7 @@ export declare const getRawMediaUploadData: (media: WAMediaUpload, mediaType: Me
 }>;
 /** generates all the keys required to encrypt/decrypt & sign a media message */
 export declare function getMediaKeys(buffer: Uint8Array | string | null | undefined, mediaType: MediaType): Promise<MediaDecryptionKeyInfo>;
-export declare const extractImageThumb: (bufferOrFilePath: Readable | Buffer | string, width?: number) => Promise<{
+export declare const extractImageThumb: (bufferOrFilePath: Readable | Buffer | string, width?: number, maxSize?: number) => Promise<{
     buffer: any;
     original: {
         width: any;
@@ -37,7 +37,7 @@ export declare function getAudioDuration(buffer: Buffer | string | Readable | Re
  */
 export declare function getAudioWaveform(buffer: Buffer | string | Readable | ReadableStream, logger?: ILogger): Promise<Uint8Array<ArrayBuffer> | undefined>;
 export declare const toReadable: (buffer: Buffer) => Readable;
-export declare const toBuffer: (stream: Readable | ReadableStream) => Promise<Buffer<ArrayBuffer>>;
+export declare const toBuffer: (stream: Readable | ReadableStream, maxSize?: number) => Promise<Buffer<ArrayBuffer>>;
 export declare const getStream: (item: WAMediaUpload, opts?: RequestInit & {
     maxContentLength?: number;
 }) => Promise<{
@@ -65,6 +65,7 @@ export declare function generateThumbnail(file: string, mediaType: 'video' | 'im
 }>;
 export declare const getHttpStream: (url: string | URL, options?: RequestInit & {
     isStream?: true;
+    maxContentLength?: number;
 }) => Promise<Readable>;
 type EncryptedStreamOptions = {
     saveOriginalFileIfRequired?: boolean;
