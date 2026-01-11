@@ -68,6 +68,7 @@ export type SignalRepository = {
         reason?: string;
     }>;
     deleteSession(jids: string[]): Promise<void>;
+    deleteIdentity(jids: string[]): Promise<void>;
 };
 export interface SignalRepositoryWithLIDStore extends SignalRepository {
     lidMapping: LIDMappingStore;
