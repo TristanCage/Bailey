@@ -20,6 +20,8 @@ export declare const NOISE_WA_HEADER: Buffer<ArrayBuffer>;
 export declare const URL_REGEX: RegExp;
 export declare const WA_CERT_DETAILS: {
     SERIAL: number;
+    ISSUER: string;
+    PUBLIC_KEY: Buffer<ArrayBuffer>;
 };
 export declare const PROCESSABLE_HISTORY_TYPES: proto.HistorySync.HistorySyncType[];
 export declare const DEFAULT_CONNECTION_CONFIG: SocketConfig;
