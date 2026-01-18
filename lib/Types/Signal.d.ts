@@ -63,12 +63,12 @@ export type SignalRepository = {
         skipped: number;
         total: number;
     }>;
-    validateSession(jid: string): Promise<{
-        exists: boolean;
-        reason?: string;
-    }>;
     deleteSession(jids: string[]): Promise<void>;
     deleteIdentity(jids: string[]): Promise<void>;
+    validateSessions(jids: string[]): Promise<Record<string, {
+        exists: boolean;
+        reason?: string;
+    }>>;
 };
 export interface SignalRepositoryWithLIDStore extends SignalRepository {
     lidMapping: LIDMappingStore;
