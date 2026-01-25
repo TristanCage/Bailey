@@ -243,6 +243,8 @@ export declare const makeCommunitiesSocket: (config: SocketConfig) => {
     digestKeyBundle: () => Promise<void>;
     rotateSignedPreKey: () => Promise<void>;
     requestPairingCode: (phoneNumber: string, customPairingCode?: string) => Promise<string>;
+    updateServerTimeOffset: ({ attrs }: BinaryNode) => void;
+    sendUnifiedSession: () => Promise<void>;
     wamBuffer: import("../index.js").BinaryInfo;
     waitForConnectionUpdate: (check: (u: Partial<import("../Types/index.js").ConnectionState>) => Promise<boolean | undefined>, timeoutMs?: number) => Promise<void>;
     sendWAMBuffer: (wamBuffer: Buffer) => Promise<any>;

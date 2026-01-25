@@ -61,4 +61,10 @@ export declare const DEFAULT_CACHE_TTLS: {
     CALL_OFFER: number;
     USER_DEVICES: number;
 };
+export declare const TimeMs: {
+    Minute: number;
+    Hour: number;
+    Day: number;
+    Week: number;
+};
 //# sourceMappingURL=index.d.ts.map

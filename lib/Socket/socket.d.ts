@@ -40,6 +40,8 @@ export declare const makeSocket: (config: SocketConfig) => {
     digestKeyBundle: () => Promise<void>;
     rotateSignedPreKey: () => Promise<void>;
     requestPairingCode: (phoneNumber: string, customPairingCode?: string) => Promise<string>;
+    updateServerTimeOffset: ({ attrs }: BinaryNode) => void;
+    sendUnifiedSession: () => Promise<void>;
     wamBuffer: BinaryInfo;
     /** Waits for the connection to WA to reach a state */
     waitForConnectionUpdate: (check: (u: Partial<import("../Types/index.js").ConnectionState>) => Promise<boolean | undefined>, timeoutMs?: number) => Promise<void>;
