@@ -12,6 +12,8 @@ export declare const WA_ADV_DEVICE_SIG_PREFIX: Buffer<ArrayBuffer>;
 export declare const WA_ADV_HOSTED_ACCOUNT_SIG_PREFIX: Buffer<ArrayBuffer>;
 export declare const WA_ADV_HOSTED_DEVICE_SIG_PREFIX: Buffer<ArrayBuffer>;
 export declare const WA_DEFAULT_EPHEMERAL: number;
+/** Status messages older than 24 hours are considered expired */
+export declare const STATUS_EXPIRY_SECONDS: number;
 export declare const NOISE_MODE = "Noise_XX_25519_AESGCM_SHA256\0\0\0\0";
 export declare const DICT_VERSION = 3;
 export declare const KEY_BUNDLE_TYPE: Buffer<ArrayBuffer>;

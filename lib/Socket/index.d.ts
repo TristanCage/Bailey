@@ -35,7 +35,7 @@ declare const makeWASocket: (config: UserFacingSocketConfig) => {
     communityRevokeInvite: (jid: string) => Promise<string | undefined>;
     communityAcceptInvite: (code: string) => Promise<string | undefined>;
     communityRevokeInviteV4: (communityJid: string, invitedJid: string) => Promise<boolean>;
-    communityAcceptInviteV4: (key: string | import("../index.js").WAMessageKey, inviteMessage: import("../index.js").proto.Message.IGroupInviteMessage) => Promise<any>;
+    communityAcceptInviteV4: any;
     communityGetInviteInfo: (code: string) => Promise<import("../index.js").GroupMetadata>;
     communityToggleEphemeral: (jid: string, ephemeralExpiration: number) => Promise<void>;
     communitySettingUpdate: (jid: string, setting: "announcement" | "not_announcement" | "locked" | "unlocked") => Promise<void>;
@@ -133,7 +133,7 @@ declare const makeWASocket: (config: UserFacingSocketConfig) => {
     groupRevokeInvite: (jid: string) => Promise<string | undefined>;
     groupAcceptInvite: (code: string) => Promise<string | undefined>;
     groupRevokeInviteV4: (groupJid: string, invitedJid: string) => Promise<boolean>;
-    groupAcceptInviteV4: (key: string | import("../index.js").WAMessageKey, inviteMessage: import("../index.js").proto.Message.IGroupInviteMessage) => Promise<any>;
+    groupAcceptInviteV4: any;
     groupGetInviteInfo: (code: string) => Promise<import("../index.js").GroupMetadata>;
     groupToggleEphemeral: (jid: string, ephemeralExpiration: number) => Promise<void>;
     groupSettingUpdate: (jid: string, setting: "announcement" | "not_announcement" | "locked" | "unlocked") => Promise<void>;
@@ -158,7 +158,7 @@ declare const makeWASocket: (config: UserFacingSocketConfig) => {
     notificationMutex: {
         mutex<T>(code: () => Promise<T> | T): Promise<T>;
     };
-    upsertMessage: (msg: import("../index.js").WAMessage, type: import("../index.js").MessageUpsertType) => Promise<void>;
+    upsertMessage: any;
     appPatch: (patchCreate: import("../index.js").WAPatchCreate) => Promise<void>;
     sendPresenceUpdate: (type: import("../index.js").WAPresence, toJid?: string) => Promise<void>;
     presenceSubscribe: (toJid: string) => Promise<void>;
@@ -185,7 +185,7 @@ declare const makeWASocket: (config: UserFacingSocketConfig) => {
     updateGroupsAddPrivacy: (value: import("../index.js").WAPrivacyGroupAddValue) => Promise<void>;
     updateDefaultDisappearingMode: (duration: number) => Promise<void>;
     getBusinessProfile: (jid: string) => Promise<import("../index.js").WABusinessProfile | void>;
-    resyncAppState: (collections: readonly ("critical_unblock_low" | "regular_high" | "regular_low" | "critical_block" | "regular")[], isInitialSync: boolean) => Promise<void>;
+    resyncAppState: any;
     chatModify: (mod: import("../index.js").ChatModification, jid: string) => Promise<void>;
     cleanDirtyBits: (type: "account_sync" | "groups", fromTimestamp?: number | string) => Promise<void>;
     addOrEditContact: (jid: string, contact: import("../index.js").proto.SyncActionValue.IContactAction) => Promise<void>;
@@ -203,13 +203,7 @@ declare const makeWASocket: (config: UserFacingSocketConfig) => {
     removeQuickReply: (timestamp: string) => Promise<void>;
     type: "md";
     ws: import("./Client/index.js").WebSocketClient;
-    ev: import("../index.js").BaileysEventEmitter & {
-        process(handler: (events: Partial<import("../index.js").BaileysEventMap>) => void | Promise<void>): () => void;
-        buffer(): void;
-        createBufferedFunction<A extends any[], T>(work: (...args: A) => Promise<T>): (...args: A) => Promise<T>;
-        flush(): boolean;
-        isBuffering(): boolean;
-    };
+    ev: any;
     authState: {
         creds: import("../index.js").AuthenticationCreds;
         keys: import("../index.js").SignalKeyStoreWithTransaction;
@@ -223,15 +217,13 @@ declare const makeWASocket: (config: UserFacingSocketConfig) => {
     sendRawMessage: (data: Uint8Array | Buffer) => Promise<void>;
     sendNode: (frame: import("../index.js").BinaryNode) => Promise<void>;
     logout: (msg?: string) => Promise<void>;
-    end: (error: Error | undefined) => Promise<void>;
+    end: (error: Error | undefined) => void;
     onUnexpectedError: (err: Error | import("@hapi/boom").Boom, msg: string) => void;
     uploadPreKeys: (count?: number, retryCount?: number) => Promise<void>;
     uploadPreKeysToServerIfRequired: () => Promise<void>;
     digestKeyBundle: () => Promise<void>;
     rotateSignedPreKey: () => Promise<void>;
     requestPairingCode: (phoneNumber: string, customPairingCode?: string) => Promise<string>;
-    updateServerTimeOffset: ({ attrs }: import("../index.js").BinaryNode) => void;
-    sendUnifiedSession: () => Promise<void>;
     wamBuffer: import("../index.js").BinaryInfo;
     waitForConnectionUpdate: (check: (u: Partial<import("../index.js").ConnectionState>) => Promise<boolean | undefined>, timeoutMs?: number) => Promise<void>;
     sendWAMBuffer: (wamBuffer: Buffer) => Promise<any>;
@@ -240,6 +232,9 @@ declare const makeWASocket: (config: UserFacingSocketConfig) => {
         jid: string;
         exists: boolean;
     }[] | undefined>;
+    updateServerTimeOffset: ({ attrs }: import("../index.js").BinaryNode) => void;
+    getUnifiedSessionId: () => string;
+    disposables: (() => void)[];
 };
 export default makeWASocket;
 //# sourceMappingURL=index.d.ts.map

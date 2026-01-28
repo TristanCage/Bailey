@@ -13,13 +13,7 @@ import { WebSocketClient } from './Client/index.js';
 export declare const makeSocket: (config: SocketConfig) => {
     type: "md";
     ws: WebSocketClient;
-    ev: import("../Types/index.js").BaileysEventEmitter & {
-        process(handler: (events: Partial<import("../Types/index.js").BaileysEventMap>) => void | Promise<void>): () => void;
-        buffer(): void;
-        createBufferedFunction<A extends any[], T>(work: (...args: A) => Promise<T>): (...args: A) => Promise<T>;
-        flush(): boolean;
-        isBuffering(): boolean;
-    };
+    ev: any;
     authState: {
         creds: import("../Types/index.js").AuthenticationCreds;
         keys: import("../Types/index.js").SignalKeyStoreWithTransaction;
@@ -33,15 +27,13 @@ export declare const makeSocket: (config: SocketConfig) => {
     sendRawMessage: (data: Uint8Array | Buffer) => Promise<void>;
     sendNode: (frame: BinaryNode) => Promise<void>;
     logout: (msg?: string) => Promise<void>;
-    end: (error: Error | undefined) => Promise<void>;
+    end: (error: Error | undefined) => void;
     onUnexpectedError: (err: Error | Boom, msg: string) => void;
     uploadPreKeys: (count?: number, retryCount?: number) => Promise<void>;
     uploadPreKeysToServerIfRequired: () => Promise<void>;
     digestKeyBundle: () => Promise<void>;
     rotateSignedPreKey: () => Promise<void>;
     requestPairingCode: (phoneNumber: string, customPairingCode?: string) => Promise<string>;
-    updateServerTimeOffset: ({ attrs }: BinaryNode) => void;
-    sendUnifiedSession: () => Promise<void>;
     wamBuffer: BinaryInfo;
     /** Waits for the connection to WA to reach a state */
     waitForConnectionUpdate: (check: (u: Partial<import("../Types/index.js").ConnectionState>) => Promise<boolean | undefined>, timeoutMs?: number) => Promise<void>;
@@ -51,5 +43,8 @@ export declare const makeSocket: (config: SocketConfig) => {
         jid: string;
         exists: boolean;
     }[] | undefined>;
+    updateServerTimeOffset: ({ attrs }: BinaryNode) => void;
+    getUnifiedSessionId: () => string;
+    disposables: (() => void)[];
 };
 //# sourceMappingURL=socket.d.ts.map

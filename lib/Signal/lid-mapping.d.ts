@@ -16,6 +16,10 @@ export declare class LIDMappingStore {
     getLIDForPN(pn: string): Promise<string | null>;
     getLIDsForPNs(pns: string[]): Promise<LIDMapping[] | null>;
     /**
+     * Get PNs for LIDs - USER LEVEL with device construction
+     */
+    getPNsForLIDs(lids: string[]): Promise<LIDMapping[]>;
+    /**
      * Get PN for LID - USER LEVEL with device construction
      */
     getPNForLID(lid: string): Promise<string | null>;

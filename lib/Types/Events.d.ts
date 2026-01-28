@@ -1,6 +1,6 @@
 import type { Boom } from '@hapi/boom';
 import { proto } from '../../WAProto/index.js';
-import type { AuthenticationCreds, LIDMapping } from './Auth.js';
+import type { AuthenticationCreds } from './Auth.js';
 import type { WACallEvent } from './Call.js';
 import type { Chat, ChatUpdate, PresenceData } from './Chat.js';
 import type { Contact } from './Contact.js';
@@ -19,7 +19,6 @@ export type BaileysEventMap = {
         chats: Chat[];
         contacts: Contact[];
         messages: WAMessage[];
-        lidPnMappings: LIDMapping[];
         isLatest?: boolean;
         progress?: number | null;
         syncType?: proto.HistorySync.HistorySyncType | null;
@@ -183,7 +182,6 @@ export type BufferedEventData = {
         messages: {
             [uqId: string]: WAMessage;
         };
-        lidPnMappings: LIDMapping[];
         empty: boolean;
         isLatest: boolean;
         progress?: number | null;
