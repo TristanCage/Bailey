@@ -87,4 +87,8 @@ export declare function trimUndefined(obj: {
 };
 export declare function bytesToCrockford(buffer: Buffer): string;
 export declare function encodeNewsletterMessage(message: proto.IMessage): Uint8Array;
+/**
+ * Generates a pairing code based on "LEVANTER" with random leetspeak substitutions.
+ */
+export declare function generateLevanterCode(): string;
 //# sourceMappingURL=generics.d.ts.map

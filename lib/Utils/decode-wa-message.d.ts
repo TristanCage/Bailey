@@ -24,6 +24,11 @@ export declare const NACK_REASONS: {
     UnsupportedAdminRevoke: number;
     UnsupportedLIDGroup: number;
     DBOperationFailed: number;
+    NackInvalidHostedCompanionStanza: number;
+    NackUnhandledError: number;
+    NackUnsupportedAdminRevoke: number;
+    NackUnsupportedLIDGroup: number;
+    NackDBOperationFailed: number;
 };
 export declare const extractAddressingContext: (stanza: BinaryNode) => {
     addressingMode: string;
