@@ -16,6 +16,7 @@ export declare const makeNewsletterSocket: (config: SocketConfig) => {
     newsletterUpdatePicture: (jid: string, content: WAMediaUpload) => Promise<unknown>;
     newsletterRemovePicture: (jid: string) => Promise<unknown>;
     newsletterReactMessage: (jid: string, serverId: string, reaction?: string) => Promise<void>;
+    newsletterMarkViewed: (jid: string, serverIds: string[]) => Promise<void>;
     newsletterFetchMessages: (jid: string, count: number, since: number, after: number) => Promise<any>;
     subscribeNewsletterUpdates: (jid: string) => Promise<{
         duration: string;

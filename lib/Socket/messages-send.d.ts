@@ -5,8 +5,8 @@ import { MessageRetryManager } from '../Utils/index.js';
 import { type BinaryNode, type JidWithDevice } from '../WABinary/index.js';
 import { USyncQuery } from '../WAUSync/index.js';
 export declare const makeMessagesSocket: (config: SocketConfig) => {
-    getPrivacyTokens: (jids: string[]) => Promise<any>;
     assertSessions: (jids: string[], force?: boolean) => Promise<boolean>;
+    getPrivacyTokens: (jids: string[]) => Promise<any>;
     relayMessage: (jid: string, message: proto.IMessage, { messageId: msgId, participant, additionalAttributes, additionalNodes, useUserDevicesCache, useCachedGroupMetadata, statusJidList }: MessageRelayOptions) => Promise<string>;
     sendReceipt: (jid: string, participant: string | undefined, messageIds: string[], type: MessageReceiptType) => Promise<void>;
     sendReceipts: (keys: WAMessageKey[], type: MessageReceiptType) => Promise<void>;
@@ -43,6 +43,7 @@ export declare const makeMessagesSocket: (config: SocketConfig) => {
     newsletterUpdatePicture: (jid: string, content: import("../Types/index.js").WAMediaUpload) => Promise<unknown>;
     newsletterRemovePicture: (jid: string) => Promise<unknown>;
     newsletterReactMessage: (jid: string, serverId: string, reaction?: string) => Promise<void>;
+    newsletterMarkViewed: (jid: string, serverIds: string[]) => Promise<void>;
     newsletterFetchMessages: (jid: string, count: number, since: number, after: number) => Promise<any>;
     subscribeNewsletterUpdates: (jid: string) => Promise<{
         duration: string;

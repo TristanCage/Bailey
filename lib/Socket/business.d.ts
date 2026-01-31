@@ -25,8 +25,8 @@ export declare const makeBusinessSocket: (config: SocketConfig) => {
     fetchMessageHistory: (count: number, oldestMsgKey: import("../index.js").WAMessageKey, oldestMsgTimestamp: number | Long) => Promise<string>;
     requestPlaceholderResend: (messageKey: import("../index.js").WAMessageKey) => Promise<string | undefined>;
     messageRetryManager: import("../index.js").MessageRetryManager | null;
-    getPrivacyTokens: (jids: string[]) => Promise<any>;
     assertSessions: (jids: string[], force?: boolean) => Promise<boolean>;
+    getPrivacyTokens: (jids: string[]) => Promise<any>;
     relayMessage: (jid: string, message: import("../index.js").proto.IMessage, { messageId: msgId, participant, additionalAttributes, additionalNodes, useUserDevicesCache, useCachedGroupMetadata, statusJidList }: import("../index.js").MessageRelayOptions) => Promise<string>;
     sendReceipt: (jid: string, participant: string | undefined, messageIds: string[], type: import("../index.js").MessageReceiptType) => Promise<void>;
     sendReceipts: (keys: import("../index.js").WAMessageKey[], type: import("../index.js").MessageReceiptType) => Promise<void>;
@@ -62,6 +62,7 @@ export declare const makeBusinessSocket: (config: SocketConfig) => {
     newsletterUpdatePicture: (jid: string, content: WAMediaUpload) => Promise<unknown>;
     newsletterRemovePicture: (jid: string) => Promise<unknown>;
     newsletterReactMessage: (jid: string, serverId: string, reaction?: string) => Promise<void>;
+    newsletterMarkViewed: (jid: string, serverIds: string[]) => Promise<void>;
     newsletterFetchMessages: (jid: string, count: number, since: number, after: number) => Promise<any>;
     subscribeNewsletterUpdates: (jid: string) => Promise<{
         duration: string;

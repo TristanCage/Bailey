@@ -6,11 +6,23 @@ import type { BinaryNode } from '../WABinary/index.js';
 import type { GroupMetadata } from './GroupMetadata.js';
 import type { CacheStore } from './Socket.js';
 export { proto as WAProto };
+export type MsgBotInfo = {
+    editType: 'inner' | 'last' | 'none';
+    editTargetId?: string;
+    editSenderTimestampMs?: number;
+};
+export type MsgMetaInfo = {
+    targetId?: string;
+    targetSenderJid?: string;
+    targetChatJid?: string;
+};
 export type WAMessage = proto.IWebMessageInfo & {
     key: WAMessageKey;
     messageStubParameters?: any;
     category?: string;
     retryCount?: number;
+    botInfo?: MsgBotInfo;
+    metaInfo?: MsgMetaInfo;
 };
 export type WAMessageContent = proto.IMessage;
 export type WAContactMessage = proto.Message.IContactMessage;

@@ -24,6 +24,8 @@ type BaileysBufferableEventEmitter = BaileysEventEmitter & {
     flush(): boolean;
     /** is there an ongoing buffer */
     isBuffering(): boolean;
+    /** clear all conditional updates from the buffer */
+    clearConditionalUpdates(): void;
 };
 /**
  * The event buffer logically consolidates different events into a single event
