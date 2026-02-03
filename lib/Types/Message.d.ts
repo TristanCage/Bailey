@@ -249,10 +249,12 @@ export type MiscMessageGenerationOptions = MinimalRelayOptions & {
     statusJidList?: string[];
     /** backgroundcolor for status */
     backgroundColor?: string;
-    /** font type for status */
+    /** fonts type for status */
     font?: number;
     /** if it is broadcast */
     broadcast?: boolean;
+    /** should we use the devices cache, or fetch afresh from the server; default assumed to be "true" */
+    useUserDevicesCache?: boolean;
 };
 export type MessageGenerationOptionsFromContent = MiscMessageGenerationOptions & {
     userJid: string;
