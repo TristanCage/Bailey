@@ -125,6 +125,7 @@ export declare const makeNewsletterSocket: (config: SocketConfig) => {
         keys: import("../index.js").SignalKeyStoreWithTransaction;
     };
     signalRepository: import("../index.js").SignalRepositoryWithLIDStore;
+    logger: import("../Utils/logger.js").ILogger;
     user: import("../index.js").Contact | undefined;
     generateMessageTag: () => string;
     query: (node: import("../index.js").BinaryNode, timeoutMs?: number) => Promise<any>;

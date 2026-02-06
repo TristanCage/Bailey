@@ -153,6 +153,7 @@ export declare const makeMessagesRecvSocket: (config: SocketConfig) => {
         keys: import("../Types/index.js").SignalKeyStoreWithTransaction;
     };
     signalRepository: import("../Types/index.js").SignalRepositoryWithLIDStore;
+    logger: import("../Utils/logger.js").ILogger;
     user: import("../Types/index.js").Contact | undefined;
     generateMessageTag: () => string;
     query: (node: BinaryNode, timeoutMs?: number) => Promise<any>;

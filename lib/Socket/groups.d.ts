@@ -1,5 +1,6 @@
 import { proto } from '../../WAProto/index.js';
-import type { GroupMetadata, ParticipantAction, SocketConfig } from '../Types/index.js';
+import type { GroupMetadata, ParticipantAction, SignalRepositoryWithLIDStore, SocketConfig } from '../Types/index.js';
+import type { ILogger } from '../Utils/logger.js';
 import { type BinaryNode } from '../WABinary/index.js';
 export declare const makeGroupsSocket: (config: SocketConfig) => {
     groupMetadata: (jid: string) => Promise<GroupMetadata>;
@@ -112,7 +113,8 @@ export declare const makeGroupsSocket: (config: SocketConfig) => {
         creds: import("../Types/index.js").AuthenticationCreds;
         keys: import("../Types/index.js").SignalKeyStoreWithTransaction;
     };
-    signalRepository: import("../Types/index.js").SignalRepositoryWithLIDStore;
+    signalRepository: SignalRepositoryWithLIDStore;
+    logger: ILogger;
     user: import("../Types/index.js").Contact | undefined;
     generateMessageTag: () => string;
     query: (node: BinaryNode, timeoutMs?: number) => Promise<any>;
@@ -140,6 +142,9 @@ export declare const makeGroupsSocket: (config: SocketConfig) => {
     getUnifiedSessionId: () => string;
     disposables: (() => void)[];
 };
-export declare const extractGroupMetadata: (result: BinaryNode) => GroupMetadata;
+export declare const extractGroupMetadata: (result: BinaryNode, sock?: {
+    signalRepository: SignalRepositoryWithLIDStore;
+    logger: ILogger;
+}) => GroupMetadata;
 export type GroupsSocket = ReturnType<typeof makeGroupsSocket>;
 //# sourceMappingURL=groups.d.ts.map
