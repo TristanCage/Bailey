@@ -29,6 +29,23 @@ export declare const NACK_REASONS: {
     NackUnsupportedLIDGroup: number;
     NackDBOperationFailed: number;
 };
+/**
+ * Server-side error codes returned in ack stanzas (server → client).
+ * These are distinct from the client-side NackReason enum
+ * (WAWebCreateNackFromStanza) which covers client→server nack codes.
+ * 421 and 475 happen to overlap numerically, but 463 and 479 are
+ * server-specific codes not present in the client enum.
+ */
+export declare const SERVER_ERROR_CODES: {
+    /** Group addressing mode is stale — re-query group metadata */
+    readonly StaleGroupAddressingMode: "421";
+    /** 1:1 message missing privacy token (tctoken) */
+    readonly MissingTcToken: "463";
+    /** New chat messages rate limited */
+    readonly NewChatMessagesCapped: "475";
+    /** Stanza validation failure (SMAX_INVALID) — likely stale device session */
+    readonly SmaxInvalid: "479";
+};
 export declare const extractAddressingContext: (stanza: BinaryNode) => {
     addressingMode: string;
     senderAlt: string | undefined;

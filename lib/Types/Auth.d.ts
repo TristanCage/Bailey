@@ -80,6 +80,7 @@ export type SignalDataTypeMap = {
     tctoken: {
         token: Buffer;
         timestamp?: string;
+        senderTimestamp?: number;
     };
 };
 export type SignalDataSet = {

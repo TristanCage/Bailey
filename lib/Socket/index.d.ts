@@ -68,7 +68,7 @@ declare const makeWASocket: (config: UserFacingSocketConfig) => {
     requestPlaceholderResend: (messageKey: import("../index.js").WAMessageKey) => Promise<string | undefined>;
     messageRetryManager: import("../index.js").MessageRetryManager | null;
     assertSessions: (jids: string[], force?: boolean) => Promise<boolean>;
-    getPrivacyTokens: (jids: string[]) => Promise<any>;
+    getPrivacyTokens: (jids: string[], timestamp?: number) => Promise<any>;
     relayMessage: (jid: string, message: import("../index.js").proto.IMessage, { messageId: msgId, participant, additionalAttributes, additionalNodes, useUserDevicesCache, useCachedGroupMetadata, statusJidList }: import("../index.js").MessageRelayOptions) => Promise<string>;
     sendReceipt: (jid: string, participant: string | undefined, messageIds: string[], type: import("../index.js").MessageReceiptType) => Promise<void>;
     sendReceipts: (keys: import("../index.js").WAMessageKey[], type: import("../index.js").MessageReceiptType) => Promise<void>;
