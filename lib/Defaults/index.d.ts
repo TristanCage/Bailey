@@ -1,5 +1,6 @@
 import { proto } from '../../WAProto/index.js';
 import type { SocketConfig } from '../Types/index.js';
+export declare const version: [number, number, number];
 export declare const UNAUTHORIZED_CODES: number[];
 export declare const DEFAULT_ORIGIN = "https://web.whatsapp.com";
 export declare const CALL_VIDEO_PREFIX = "https://call.whatsapp.com/video/";
@@ -28,6 +29,9 @@ export declare const WA_CERT_DETAILS: {
 export declare const PROCESSABLE_HISTORY_TYPES: proto.HistorySync.HistorySyncType[];
 export declare const DEFAULT_CONNECTION_CONFIG: SocketConfig;
 export declare const MEDIA_PATH_MAP: {
+    [T in MediaType]?: string;
+};
+export declare const NEWSLETTER_MEDIA_PATH_MAP: {
     [T in MediaType]?: string;
 };
 export declare const MEDIA_HKDF_KEY_MAPPING: {

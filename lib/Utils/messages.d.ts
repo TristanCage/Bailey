@@ -87,5 +87,6 @@ type DownloadMediaMessageContext = {
 export declare const downloadMediaMessage: <Type extends "buffer" | "stream">(message: WAMessage, type: Type, options: MediaDownloadOptions, ctx?: DownloadMediaMessageContext) => Promise<Type extends "buffer" ? Buffer<ArrayBufferLike> : Transform>;
 /** Checks whether the given message is a media message; if it is returns the inner content */
 export declare const assertMediaContent: (content: proto.IMessage | null | undefined) => proto.Message.IVideoMessage | proto.Message.IImageMessage | proto.Message.IAudioMessage | proto.Message.IDocumentMessage | proto.Message.IStickerMessage;
+export declare const getMediaType: (message: proto.IMessage) => "reaction" | "poll" | "order" | "vcard" | "product" | "" | "image" | "video" | "sticker" | "list" | "audio" | "gif" | "document" | "url" | "ptt" | "contact_array" | "livelocation" | "list_response" | "buttons_response" | "native_flow_response";
 export {};
 //# sourceMappingURL=messages.d.ts.map

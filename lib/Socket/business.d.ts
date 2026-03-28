@@ -17,7 +17,7 @@ export declare const makeBusinessSocket: (config: SocketConfig) => {
     }>;
     productUpdate: (productId: string, update: ProductUpdate) => Promise<import("../index.js").Product>;
     updateBussinesProfile: (args: UpdateBussinesProfileProps) => Promise<any>;
-    updateCoverPhoto: (photo: WAMediaUpload) => Promise<number>;
+    updateCoverPhoto: (photo: WAMediaUpload) => Promise<string | number>;
     removeCoverPhoto: (id: string) => Promise<any>;
     sendMessageAck: ({ tag, attrs, content }: BinaryNode, errorCode?: number) => Promise<void>;
     sendRetryRequest: (node: BinaryNode, forceIncludeKeys?: boolean) => Promise<void>;

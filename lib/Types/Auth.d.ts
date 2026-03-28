@@ -64,6 +64,10 @@ export type AuthenticationCreds = SignalCreds & {
     lastPropHash: string | undefined;
     routingInfo: Buffer | undefined;
     additionalData?: any | undefined;
+    /**
+     * Deat of the LID migration
+     */
+    lidMigrationTimestamp?: number;
 };
 export type SignalDataTypeMap = {
     'pre-key': KeyPair;

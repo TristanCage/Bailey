@@ -4,7 +4,7 @@ import { Readable, Transform } from 'stream';
 import { URL } from 'url';
 import { proto } from '../../WAProto/index.js';
 import { type MediaType } from '../Defaults/index.js';
-import type { DownloadableMessage, MediaConnInfo, MediaDecryptionKeyInfo, SocketConfig, WAMediaUpload, WAMediaUploadFunction, WAMessageContent, WAMessageKey } from '../Types/index.js';
+import type { DownloadableMessage, MediaConnInfo, MediaDecryptionKeyInfo, MediaGenerationOptions, SocketConfig, WAMediaUpload, WAMediaUploadFunction, WAMessageContent, WAMessageKey } from '../Types/index.js';
 import { type BinaryNode } from '../WABinary/index.js';
 import type { ILogger } from './logger.js';
 export declare const hkdfInfoKey: (type: MediaType) => string;
@@ -97,9 +97,10 @@ export declare function extensionForMediaMessage(message: WAMessageContent): str
 type MediaUploadResult = {
     url?: string;
     direct_path?: string;
+    handle?: string;
     meta_hmac?: string;
     ts?: number;
-    fbid?: number;
+    fbid?: string | number;
 };
 export type UploadParams = {
     url: string;
@@ -110,6 +111,7 @@ export type UploadParams = {
 };
 export declare const uploadWithNodeHttp: ({ url, filePath, headers, timeoutMs, agent }: UploadParams, redirectCount?: number) => Promise<MediaUploadResult | undefined>;
 export declare const getWAUploadToServer: ({ customUploadHosts, fetchAgent, logger, options }: SocketConfig, refreshMediaConn: (force: boolean) => Promise<MediaConnInfo>) => WAMediaUploadFunction;
+export declare const getWANewsletterUploadToServer: ({ customUploadHosts, fetchAgent, logger, options }: SocketConfig, refreshMediaConn: (force: boolean) => Promise<MediaConnInfo>) => WAMediaUploadFunction;
 /**
  * Generate a binary node that will request the phone to re-upload the media & return the newly uploaded URL
  */
@@ -127,5 +129,9 @@ export declare const decryptMediaRetryData: ({ ciphertext, iv }: {
     iv: Uint8Array;
 }, mediaKey: Uint8Array, msgId: string) => Promise<proto.MediaRetryNotification>;
 export declare const getStatusCodeForMediaRetry: (code: number) => 200 | 412 | 404 | 418;
+export declare const prepareNewsletterMedia: (media: WAMediaUpload, options: MediaGenerationOptions) => Promise<{
+    message: proto.IMessage;
+    handle: string | undefined;
+}>;
 export {};
 //# sourceMappingURL=messages-media.d.ts.map

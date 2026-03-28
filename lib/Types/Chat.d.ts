@@ -16,6 +16,15 @@ export type WAPrivacyMessagesValue = 'all' | 'contacts';
 /** set of statuses visible to other people; see updatePresence() in WhatsAppWeb.Send */
 export type WAPresence = 'unavailable' | 'available' | 'composing' | 'recording' | 'paused';
 export declare const ALL_WA_PATCH_NAMES: readonly ["critical_block", "critical_unblock_low", "regular_high", "regular_low", "regular"];
+/**
+ * New app state sync indexes identified from whatsmeow:
+ * - newsletter_saved_interests
+ * - subscriptions_sync_v2
+ * - thread_pin
+ * - ai_thread_rename
+ * - ai_thread_delete
+ * - nct_salt_sync
+ */
 export type WAPatchName = (typeof ALL_WA_PATCH_NAMES)[number];
 export interface PresenceData {
     lastKnownPresence: WAPresence;

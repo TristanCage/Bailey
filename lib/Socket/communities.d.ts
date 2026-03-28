@@ -72,7 +72,7 @@ export declare const makeCommunitiesSocket: (config: SocketConfig) => {
     }>;
     productUpdate: (productId: string, update: import("../Types/index.js").ProductUpdate) => Promise<import("../Types/index.js").Product>;
     updateBussinesProfile: (args: import("../Types/Bussines.js").UpdateBussinesProfileProps) => Promise<any>;
-    updateCoverPhoto: (photo: import("../Types/index.js").WAMediaUpload) => Promise<number>;
+    updateCoverPhoto: (photo: import("../Types/index.js").WAMediaUpload) => Promise<string | number>;
     removeCoverPhoto: (id: string) => Promise<any>;
     sendMessageAck: ({ tag, attrs, content }: BinaryNode, errorCode?: number) => Promise<void>;
     sendRetryRequest: (node: BinaryNode, forceIncludeKeys?: boolean) => Promise<void>;
