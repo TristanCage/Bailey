@@ -123,6 +123,44 @@ sock.ev.on('messages.upsert', async ({ messages }) => {
 });
 ```
 
+## Chat Modify
+
+Chat modifications (clear, pin, archive, etc.) automatically sync app state before sending. The `clear` operation requires `lastMessages`:
+
+```js
+// Clear chat — lastMessages is required
+await sock.chatModify({ 
+  clear: true, 
+  lastMessages: [{ key: msg.key, messageTimestamp: msg.messageTimestamp }] 
+}, jid);
+
+// Pin / Unpin
+await sock.chatModify({ pin: true }, jid);
+await sock.chatModify({ pin: false }, jid);
+
+// Archive / Unarchive
+await sock.chatModify({ archive: true }, jid);
+await sock.chatModify({ archive: false }, jid);
+```
+
+## Username Lookup
+
+```js
+import { resolveUsername } from '@tristancage/baileys';
+
+const result = await sock.resolveUsername('alice');
+// { status: 'valid' | 'taken' | 'not-found' | 'invalid', jid?, username? }
+```
+
+## Account Status
+
+```js
+import { fetchAccountReachoutTimelock, fetchNewChatMessageCap } from '@tristancage/baileys';
+
+const timelock = await sock.fetchAccountReachoutTimelock();
+const chatCap = await sock.fetchNewChatMessageCap();
+```
+
 ## API Reference
 
 For full API docs (message types, media, groups, channels, etc.), see the [official Baileys docs](https://baileys.wiki).
