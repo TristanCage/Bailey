@@ -1,6 +1,6 @@
 # @tristancage/baileys
 
-A WebSockets library for interacting with WhatsApp Web. Fork of [Baileys](https://github.com/WhiskeySockets/Baileys) with custom pairing code support and interactive button senders.
+A WebSockets library for interacting with WhatsApp Web.
 
 ## Install
 
@@ -163,7 +163,7 @@ const chatCap = await sock.fetchNewChatMessageCap();
 
 ## API Reference
 
-For full API docs (message types, media, groups, channels, etc.), see the [official Baileys docs](https://baileys.wiki).
+For full API docs (message types, media, groups, channels, etc.), see the documentation.
 
 ## Changelog
 
