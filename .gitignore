@@ -9,7 +9,6 @@ baileys_store*.json
 browser-messages.json
 browser-token.json
 decoded-ws.json
-docs
 messages*.json
 node_modules
 output.csv
