@@ -3,6 +3,8 @@ import type { AuthenticationCreds, BaileysEventEmitter, CacheStore, SignalKeySto
 import type { ILogger } from './logger.js';
 type ProcessMessageContext = {
     shouldProcessHistoryMsg: boolean;
+    /** emit the statuses of an INITIAL_STATUS_V3 history chunk (SocketConfig.processHistoryStatuses) */
+    processHistoryStatuses?: boolean;
     placeholderResendCache?: CacheStore;
     creds: AuthenticationCreds;
     keyStore: SignalKeyStoreWithTransaction;
@@ -91,6 +93,6 @@ export declare function decryptSecretEncryptedMessage(secretMsg: proto.Message.I
  * Non-edit payloads (e.g. EVENT_EDIT) and already-wrapped ones pass through unchanged.
  */
 export declare const rewriteSecretEditToProtocolMessage: (decrypted: proto.IMessage, secretMsg: proto.Message.ISecretEncryptedMessage) => proto.IMessage;
-declare const processMessage: (message: WAMessage, { shouldProcessHistoryMsg, placeholderResendCache, ev, creds, signalRepository, keyStore, logger, options, getMessage, onHistorySyncBlobProcessed }: ProcessMessageContext) => Promise<void>;
+declare const processMessage: (message: WAMessage, { shouldProcessHistoryMsg, processHistoryStatuses, placeholderResendCache, ev, creds, signalRepository, keyStore, logger, options, getMessage, onHistorySyncBlobProcessed }: ProcessMessageContext) => Promise<void>;
 export default processMessage;
 //# sourceMappingURL=process-message.d.ts.map

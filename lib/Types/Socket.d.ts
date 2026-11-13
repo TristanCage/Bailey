@@ -80,6 +80,17 @@ export type SocketConfig = {
     auth: AuthenticationState;
     /** manage history processing with this control; by default will sync up everything */
     shouldSyncHistoryMessage: (msg: proto.Message.IHistorySyncNotification) => boolean;
+    /**
+     * fork-only, default false: when true, the statuses posted before pairing (history sync INITIAL_STATUS_V3, WA Web
+     * WAWebHistorySyncHandleStatusMessages) are emitted in `messaging-history.set`: oldest first, as `status@broadcast`
+     * messages with the poster in `key.participant`, no chats or contacts, expired ones kept (WA Web leaves expiry to
+     * the display). Only for the chunks `shouldSyncHistoryMessage` lets through.
+     * Off by default because the event buffer folds a live 'notify' upsert into a buffered history set that holds the
+     * same key (event-buffer.ts, locked by its 'folds the live upsert into the buffered history set' test), so a status
+     * posted around pairing time could reach the app only in `messaging-history.set` and miss `messages.upsert`.
+     * The buffer also overwrites `syncType` per chunk: pick these out by `key.remoteJid === 'status@broadcast'`.
+     */
+    processHistoryStatuses?: boolean;
     /** transaction capability options for SignalKeyStore */
     transactionOpts: TransactionCapabilityOptions;
     /** marks the client as online whenever the socket successfully connects */
@@ -116,10 +127,22 @@ export type SocketConfig = {
     /**
      * Returns if a jid should be ignored,
      * no event for that jid will be triggered.
-     * Messages from that jid will also not be decrypted
+     * Messages from that jid will also not be decrypted.
+     * `category="peer"` messages from our own account (app-state key shares, history sync, PDO answers)
+     * are never ignored: they are protocol traffic between our own devices (zapo 408d48c)
      * */
     shouldIgnoreJid: (jid: string) => boolean | undefined;
-    /** should ignore offline messages (default: true) */
+    /**
+     * skip the app-level processing of offline messages (default: true): a message received while we were
+     * disconnected (and the resend of one that failed to decrypt, and a channel post inside an offline
+     * newsletter notification) emits no `messages.upsert` and runs no message side effects. It is still
+     * decrypted, receipted and acked, so the Signal sessions and sender keys it carries are kept.
+     * Peer messages from our own devices, notifications, receipts and calls always run, offline or not:
+     * offline notifications emit their events (`group-participants.update`, `groups.update`,
+     * `contacts.update` for pictures, ...) and their stub messages (group participant add/remove, subject,
+     * icon, ...) as `messages.upsert` of type `append`, so e.g. a welcome/goodbye bot sees group changes
+     * made while it was offline; offline calls emit `call` and their call stubs (missed call, group call: `append`).
+     */
     ignoreOfflineMessages: boolean;
     /**
      * Optionally patch the message before sending out

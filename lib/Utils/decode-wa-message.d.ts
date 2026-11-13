@@ -68,6 +68,7 @@ export declare const decryptMessageNode: (stanza: BinaryNode, meId: string, meLi
     fullMessage: WAMessage;
     category: string | undefined;
     author: string;
+    sessionScope: "status" | undefined;
     decrypt(): Promise<void>;
 };
 //# sourceMappingURL=decode-wa-message.d.ts.map

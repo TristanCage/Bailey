@@ -37,6 +37,12 @@ export type WAMessageKey = proto.IMessageKey & {
     isViewOnce?: boolean;
     /** set on channel statuses delivered as top-level <status> stanzas (whatsmeow a2381054) */
     isNewsletterStatus?: boolean;
+    /**
+     * set when the stanza marks a group status: a <status> from a group, or <meta is_group_status="true">.
+     * Add-ons (reactions, comments) on a group status carry it too; a post also wraps its content in
+     * groupStatusMessageV2, which on a <message> may come without this flag
+     */
+    isGroupStatus?: boolean;
 };
 export type WATextMessage = proto.Message.IExtendedTextMessage;
 export type WAContextInfo = proto.IContextInfo;
@@ -252,7 +258,14 @@ export type MessageRelayOptions = MinimalRelayOptions & {
     useUserDevicesCache?: boolean;
     /** jid list of participants for status@broadcast */
     statusJidList?: string[];
+    /** the status privacy setting a status post names in <meta status_setting>; none unless set */
+    statusSetting?: StatusSetting;
 };
+/**
+ * The status privacy setting of a post, as WA Web names it on the wire (WAWebStatusPublishRequestArgs
+ * .toStatusSettingMetaAttribute): my contacts, only share with (allow list), my contacts except (deny list)
+ */
+export type StatusSetting = 'contacts' | 'allowlist' | 'denylist';
 export type MiscMessageGenerationOptions = MinimalRelayOptions & {
     /** optional, if you want to manually set the timestamp of the message */
     timestamp?: Date;
@@ -264,6 +277,8 @@ export type MiscMessageGenerationOptions = MinimalRelayOptions & {
     mediaUploadTimeoutMs?: number;
     /** jid list of participants for status@broadcast */
     statusJidList?: string[];
+    /** the status privacy setting a status post names in <meta status_setting>; none unless set */
+    statusSetting?: StatusSetting;
     /** backgroundcolor for status */
     backgroundColor?: string;
     /** fonts type for status */

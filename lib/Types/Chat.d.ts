@@ -35,6 +35,26 @@ export type BotListInfo = {
     jid: string;
     personaId: string;
 };
+/** One blocked contact, as WA Web WAWebGetBlocklistJob parses it (whatsmeow 4b7a1ef) */
+export type BlocklistItem = {
+    /** the blocked user: a LID on LID-addressed lists (resolved from `pnJid` when the server omits it), else a phone-number JID */
+    jid: string;
+    /** the phone number the server paired with the LID */
+    pnJid?: string;
+    /** the LID-PN pair is current; inactive pairs are historical, so only active ones are stored as mappings */
+    active: boolean;
+    username?: string;
+    displayName?: string;
+};
+export type BlocklistResult = {
+    /** list hash; pass it back to getBlocklist / updateBlockStatus so an unchanged list is not re-sent */
+    dhash?: string;
+    /** `lid` or `pn` */
+    addressingMode?: string;
+    /** the server force-migrated the list to LIDs */
+    dirty: boolean;
+    items: BlocklistItem[];
+};
 export type ChatMutation = {
     syncAction: proto.ISyncActionData;
     index: string[];

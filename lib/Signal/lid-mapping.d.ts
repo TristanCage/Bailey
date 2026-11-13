@@ -11,6 +11,12 @@ export declare class LIDMappingStore {
     storeLIDPNMappings(pairs: LIDMapping[]): Promise<void>;
     getLIDForPN(pn: string): Promise<string | null>;
     getLIDsForPNs(pns: string[]): Promise<LIDMapping[] | null>;
+    /**
+     * The LIDs we already know for these PNs, from the cache and the DB only: never a USync, never null. A PN with no
+     * stored LID is left out. The device is kept, device 99 going to the hosted LID server, like getLIDsForPNs.
+     * WA Web maps a status audience this way (WAWebLidMigrationUtils.toUserLid, a local lookup)
+     */
+    getKnownLIDsForPNs(pns: string[]): Promise<LIDMapping[]>;
     private _getLIDsForPNsImpl;
     /**
      * Get PNs for LIDs - USER LEVEL with device construction

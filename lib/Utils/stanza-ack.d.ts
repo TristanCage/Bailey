@@ -6,6 +6,7 @@ import type { BinaryNode } from '../WABinary/index.js';
  * Mirrors WhatsApp Web's ACK construction:
  * - WAWebHandleMsgSendAck.sendAck / sendNack
  * - WAWebCreateNackFromStanza.createNackFromStanza
+ * - WAWebReceiptAck.buildReceiptAck, WAWebHandleMessageRetryRequest (receipt acks)
  */
 export declare function buildAckStanza(node: BinaryNode, errorCode?: number, meId?: string): BinaryNode;
 //# sourceMappingURL=stanza-ack.d.ts.map

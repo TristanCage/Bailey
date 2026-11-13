@@ -9,12 +9,19 @@ type ProcessSenderKeyDistributionMessageOpts = {
     item: proto.Message.ISenderKeyDistributionMessage;
     authorJid: string;
 };
+/**
+ * A 1:1 session kept apart from the default one (WA Web WAWebSessionScope): `status` is the session a sender marks
+ * with `<meta session_scope="status">` on a status, stored at the default address + `_status` (WAWebSignalAddress)
+ */
+export type SessionScope = 'status';
 type DecryptSignalProtoOpts = {
     jid: string;
     type: 'pkmsg' | 'msg';
     ciphertext: Uint8Array;
     /** `<enc type="pkmsg" state="false">`: decrypt without persisting the resulting session (whatsmeow f376da26) */
     stateless?: boolean;
+    /** decrypt with this scope's session instead of the default one */
+    scope?: SessionScope;
 };
 type EncryptMessageOpts = {
     jid: string;
@@ -75,6 +82,7 @@ export type SignalRepository = {
         skipped: number;
         total: number;
     }>;
+    /** deletes the sessions of `jids` in every scope (WA Web deleteRemoteSession) */
     deleteSession(jids: string[]): Promise<void>;
     deleteIdentity(jids: string[]): Promise<void>;
     validateSessions(jids: string[]): Promise<Record<string, {

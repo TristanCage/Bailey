@@ -47,6 +47,8 @@ export declare const isJidFB: (jid: string | undefined) => boolean | undefined;
 /** is the jid an Interop JID */
 export declare const isJidInterop: (jid: string | undefined) => boolean | undefined;
 export declare const isJidBot: (jid: string | undefined) => boolean | "" | undefined;
+/** WA Web WAWebWid.isPnBot: a bot's phone number (its c.us is our s.whatsapp.net), device 0 */
+export declare const isPnBot: (jid: string | undefined) => boolean;
 export declare const jidNormalizedUser: (jid: string | undefined) => string;
 export declare const transferDevice: (fromJid: string, toJid: string) => string;
 //# sourceMappingURL=jid-utils.d.ts.map

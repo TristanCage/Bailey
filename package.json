@@ -1,7 +1,7 @@
 {
   "name": "@tristancage/baileys",
   "type": "module",
-  "version": "6.7.10",
+  "version": "6.7.11",
   "description": "A WebSockets library for interacting with WhatsApp Web",
   "keywords": [
     "whatsapp",
@@ -12,7 +12,7 @@
     "url": "git@github.com:TristanCage/Bailey.git"
   },
   "license": "MIT",
-  "author": "Rajeh Taher",
+  "author": "TristanCage",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
@@ -25,6 +25,7 @@
     "@hapi/boom": "^9.1.3",
     "async-mutex": "^0.5.0",
     "libsignal": "^6.0.0",
+    "long": "^5.3.2",
     "lru-cache": "^11.1.0",
     "music-metadata": "11.12.1",
     "p-queue": "^9.0.0",

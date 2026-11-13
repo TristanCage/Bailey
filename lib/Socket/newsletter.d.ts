@@ -59,7 +59,7 @@ export declare const makeNewsletterSocket: (config: SocketConfig) => {
         privacyTokenOn1to1: boolean;
         profilePicPrivacyToken: boolean;
         lidTrustedTokenIssueToLid: boolean;
-        peerMessageLidOutgoing: boolean;
+        lidStatusNonSoakedClientSupport: boolean;
     };
     setHistorySyncBlobProcessedHandler: (handler: (notification: import("../index.js").proto.Message.IHistorySyncNotification) => void) => void;
     fetchAccountReachoutTimelock: () => Promise<{
@@ -91,7 +91,10 @@ export declare const makeNewsletterSocket: (config: SocketConfig) => {
     sendPresenceUpdate: (type: import("../index.js").WAPresence, toJid?: string) => Promise<void>;
     presenceSubscribe: (toJid: string) => Promise<void>;
     profilePictureUrl: (jid: string, type?: "preview" | "image", timeoutMs?: number) => Promise<string | undefined>;
-    fetchBlocklist: () => Promise<(string | undefined)[]>;
+    getBlocklist: ({ dhash }?: {
+        dhash?: string;
+    }) => Promise<import("../index.js").BlocklistResult | undefined>;
+    fetchBlocklist: () => Promise<string[]>;
     fetchStatus: (...jids: string[]) => Promise<import("../index.js").USyncQueryResultList[] | undefined>;
     fetchDisappearingDuration: (...jids: string[]) => Promise<import("../index.js").USyncQueryResultList[] | undefined>;
     updateProfilePicture: (jid: string, content: WAMediaUpload, dimensions?: {
@@ -101,7 +104,9 @@ export declare const makeNewsletterSocket: (config: SocketConfig) => {
     removeProfilePicture: (jid: string) => Promise<void>;
     updateProfileStatus: (status: string | import("./chats.js").StatusUpdateInput) => Promise<void>;
     updateProfileName: (name: string) => Promise<void>;
-    updateBlockStatus: (jid: string, action: "block" | "unblock", identity?: import("../index.js").BlocklistIdentity) => Promise<void>;
+    updateBlockStatus: (jid: string, action: "block" | "unblock", identity?: import("../index.js").BlocklistIdentity, opts?: {
+        dhash?: string;
+    }) => Promise<void>;
     updateDisableLinkPreviewsPrivacy: (isPreviewsDisabled: boolean) => Promise<void>;
     updateCallPrivacy: (value: import("../index.js").WAPrivacyCallValue) => Promise<void>;
     updateMessagesPrivacy: (value: import("../index.js").WAPrivacyMessagesValue) => Promise<void>;

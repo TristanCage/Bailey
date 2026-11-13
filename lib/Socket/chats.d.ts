@@ -1,6 +1,6 @@
 import { Boom } from '@hapi/boom';
 import { proto } from '../../WAProto/index.js';
-import type { BotListInfo, ChatModification, SocketConfig, WABusinessProfile, WAMediaUpload, WAPatchCreate, WAPresence, WAPrivacyCallValue, WAPrivacyGroupAddValue, WAPrivacyMessagesValue, WAPrivacyOnlineValue, WAPrivacyValue, WAReadReceiptsValue } from '../Types/index.js';
+import type { BlocklistResult, BotListInfo, ChatModification, SocketConfig, WABusinessProfile, WAMediaUpload, WAPatchCreate, WAPresence, WAPrivacyCallValue, WAPrivacyGroupAddValue, WAPrivacyMessagesValue, WAPrivacyOnlineValue, WAPrivacyValue, WAReadReceiptsValue } from '../Types/index.js';
 import type { QuickReplyAction } from '../Types/Bussines.js';
 import type { LabelActionBody } from '../Types/Label.js';
 import { type BlocklistIdentity } from '../Utils/username.js';
@@ -24,8 +24,8 @@ export declare const makeChatsSocket: (config: SocketConfig) => {
         profilePicPrivacyToken: boolean;
         /** AB prop 14303: issue tctokens to LID instead of PN. WA Web default: false. */
         lidTrustedTokenIssueToLid: boolean;
-        /** AB prop 24184 `peer_message_lid_migration_outgoing`: address peer messages to our own LID. WA Web default: false. */
-        peerMessageLidOutgoing: boolean;
+        /** AB prop 19696: name the poster's PN in peer_participant_pn on LID status read receipts. WA Web default: true. */
+        lidStatusNonSoakedClientSupport: boolean;
     };
     setHistorySyncBlobProcessedHandler: (handler: (notification: proto.Message.IHistorySyncNotification) => void) => void;
     fetchAccountReachoutTimelock: () => Promise<{
@@ -57,7 +57,10 @@ export declare const makeChatsSocket: (config: SocketConfig) => {
     sendPresenceUpdate: (type: WAPresence, toJid?: string) => Promise<void>;
     presenceSubscribe: (toJid: string) => Promise<void>;
     profilePictureUrl: (jid: string, type?: "preview" | "image", timeoutMs?: number) => Promise<string | undefined>;
-    fetchBlocklist: () => Promise<(string | undefined)[]>;
+    getBlocklist: ({ dhash }?: {
+        dhash?: string;
+    }) => Promise<BlocklistResult | undefined>;
+    fetchBlocklist: () => Promise<string[]>;
     fetchStatus: (...jids: string[]) => Promise<import("../WAUSync/index.js").USyncQueryResultList[] | undefined>;
     fetchDisappearingDuration: (...jids: string[]) => Promise<import("../WAUSync/index.js").USyncQueryResultList[] | undefined>;
     updateProfilePicture: (jid: string, content: WAMediaUpload, dimensions?: {
@@ -67,7 +70,9 @@ export declare const makeChatsSocket: (config: SocketConfig) => {
     removeProfilePicture: (jid: string) => Promise<void>;
     updateProfileStatus: (status: string | StatusUpdateInput) => Promise<void>;
     updateProfileName: (name: string) => Promise<void>;
-    updateBlockStatus: (jid: string, action: "block" | "unblock", identity?: BlocklistIdentity) => Promise<void>;
+    updateBlockStatus: (jid: string, action: "block" | "unblock", identity?: BlocklistIdentity, opts?: {
+        dhash?: string;
+    }) => Promise<void>;
     updateDisableLinkPreviewsPrivacy: (isPreviewsDisabled: boolean) => Promise<void>;
     updateCallPrivacy: (value: WAPrivacyCallValue) => Promise<void>;
     updateMessagesPrivacy: (value: WAPrivacyMessagesValue) => Promise<void>;

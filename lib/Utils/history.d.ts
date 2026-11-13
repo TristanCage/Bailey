@@ -2,7 +2,11 @@ import { proto } from '../../WAProto/index.js';
 import type { Chat, Contact, LIDMapping, WAMessage } from '../Types/index.js';
 import type { ILogger } from './logger.js';
 export declare const downloadHistory: (msg: proto.Message.IHistorySyncNotification, options: RequestInit) => Promise<proto.HistorySync>;
-export declare const processHistoryMessage: (item: proto.IHistorySync, logger?: ILogger) => {
+type ProcessHistoryOptions = {
+    /** emit the statuses of an INITIAL_STATUS_V3 chunk (SocketConfig.processHistoryStatuses); off by default */
+    includeStatuses?: boolean;
+};
+export declare const processHistoryMessage: (item: proto.IHistorySync, logger?: ILogger, { includeStatuses }?: ProcessHistoryOptions) => {
     chats: Chat[];
     contacts: Contact[];
     messages: WAMessage[];
@@ -19,7 +23,7 @@ export declare const processHistoryMessage: (item: proto.IHistorySync, logger?: 
     syncType: proto.HistorySync.HistorySyncType | null | undefined;
     progress: number | null | undefined;
 };
-export declare const downloadAndProcessHistorySyncNotification: (msg: proto.Message.IHistorySyncNotification, options: RequestInit, logger?: ILogger) => Promise<{
+export declare const downloadAndProcessHistorySyncNotification: (msg: proto.Message.IHistorySyncNotification, options: RequestInit, logger?: ILogger, processOptions?: ProcessHistoryOptions) => Promise<{
     chats: Chat[];
     contacts: Contact[];
     messages: WAMessage[];
@@ -42,4 +46,5 @@ export declare const getHistoryMsg: (message: proto.IMessage) => proto.Message.I
  * (WAWebHandleHistorySyncChunk) and whatsmeow (6723e556) delete once the chunk is processed.
  */
 export declare const shouldDeleteHistorySyncBlob: (notification: proto.Message.IHistorySyncNotification) => boolean;
+export {};
 //# sourceMappingURL=history.d.ts.map

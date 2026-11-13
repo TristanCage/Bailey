@@ -1,3 +1,4 @@
+import { LRUCache } from 'lru-cache';
 import type { proto } from '../../WAProto/index.js';
 import type { ILogger } from './logger.js';
 export interface RecentMessageKey {
@@ -7,7 +8,17 @@ export interface RecentMessageKey {
 export interface RecentMessage {
     message: proto.IMessage;
     timestamp: number;
+    /** a status: the users it was sent to */
+    audience?: string[];
 }
+export type RecentStatusCache = LRUCache<string, RecentMessage>;
+/**
+ * Sent statuses by id. A viewer may ask for a status again at any point of its life (WA Web keeps it 24 h,
+ * WAWebStatusModel), long after the general cache dropped it. One cache can serve every socket of an account, so a
+ * reconnect keeps it. Expiry is checked on read: ttlAutopurge arms a timer per entry, and a day-long timer would
+ * keep a closed socket's cache in memory.
+ */
+export declare const makeRecentStatusCache: () => RecentStatusCache;
 export interface SessionRecreateHistory {
     [jid: string]: number;
 }
@@ -43,6 +54,7 @@ export declare enum RetryReason {
 }
 export declare class MessageRetryManager {
     private logger;
+    private recentStatuses;
     private recentMessagesMap;
     private messageKeyIndex;
     private sessionRecreateHistory;
@@ -51,13 +63,18 @@ export declare class MessageRetryManager {
     private pendingPhoneRequests;
     private readonly maxMsgRetryCount;
     private statistics;
-    constructor(logger: ILogger, maxMsgRetryCount: number);
+    constructor(logger: ILogger, maxMsgRetryCount: number, recentStatuses?: RecentStatusCache);
     /**
      * Add a recent message to the cache for retry handling
      */
     addRecentMessage(to: string, id: string, message: proto.IMessage): void;
     /**
-     * Get a recent message from the cache
+     * Add a sent status, with the users it went to, to the status cache. It is not indexed by id, so a successful
+     * or failed retry of one viewer (markRetrySuccess / markRetryFailed) leaves it for the next viewer.
+     */
+    addRecentStatus(id: string, message: proto.IMessage, audience: string[]): void;
+    /**
+     * Get a recent message from the cache (a status from the status cache first)
      */
     getRecentMessage(to: string, id: string): RecentMessage | undefined;
     /**
