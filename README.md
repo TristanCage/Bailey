@@ -165,6 +165,10 @@ const chatCap = await sock.fetchNewChatMessageCap();
 
 For full API docs (message types, media, groups, channels, etc.), see the [official Baileys docs](https://baileys.wiki).
 
+## Changelog
+
+Everything added after v6.7.10 (buttons, username API, rich messages, flows, scheduled messages, A2UI, store, auth backends and more) is documented in [docs/POST-6.7.10-CHANGES.md](docs/POST-6.7.10-CHANGES.md).
+
 ## Disclaimer
 
 This project is not affiliated with WhatsApp or Meta. Use at your own discretion and in compliance with WhatsApp's Terms of Service.
