@@ -136,6 +136,8 @@
 - **Chat modify**: `clear` requires `lastMessages`; blocked app-state collections are retried
   with a full snapshot before encoding patches
 - **Android browser**: correct platform/`webInfo` payload for view-once delivery
+- **View-once**: delivery receipts are skipped for view-once messages so the sender's phone
+  does not revoke the media from linked devices; `viewOnceStubType` is exposed for diagnostics
 - **Long dependency**: declared explicitly as a direct dependency
 - **`datasync` fallback** for fs shims (Yarn PnP)
 
