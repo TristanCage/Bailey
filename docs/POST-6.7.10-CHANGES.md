@@ -226,3 +226,13 @@ before the 6.7.10 bump.
 - `wrapSocket(sock, options)` — wraps `sendMessage` and group operations; exposes `sock.antiban`
   with `unwire()`; nothing runs unless explicitly called
 
+### Newsletter metadata / MEX fixes
+- **`newsletterMetadata`**: updated the metadata query ID to the one current WhatsApp Web uses
+  (`27456920720571478`, verified from the live WA Web bundle) — the old ID (`6563316087068696`)
+  is stale and can make the server answer with binary Argo instead of JSON
+- **`executeWMexQuery`**: handles `<result format="argo">` responses via a built-in SelfDescribing
+  Argo decoder (`lib/Utils/argo.js`), so callers keep receiving the same GraphQL object shape;
+  JSON responses are unchanged and malformed Argo payloads throw a descriptive `Boom` with a
+  base64 preview instead of a raw `SyntaxError`
+- Added `test/argo-metadata.test.mjs` covering the Argo branch, JSON regression, and error handling
+
