@@ -1,113 +1,97 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { Boom } from '@hapi/boom';
-import { decodeArgoSelfDescribing } from '../lib/Utils/argo.js';
+import { decodeArgoForDataPath, decodeArgoSelfDescribing } from '../lib/Utils/argo.js';
 import { executeWMexQuery } from '../lib/Socket/mex.js';
 import { buildNewsletterMetadataVariables, parseNewsletterMetadata } from '../lib/Socket/newsletter.js';
 
-// --- tiny Argo SelfDescribing encoder, used only to build test fixtures ---
-const zigzag = (n) => {
-    const v = BigInt(n);
-    return v >= 0n ? v << 1n : (v << 1n) ^ ~0n;
-};
-const varint = (n) => {
-    let v = BigInt(n);
-    const out = [];
-    do {
-        let byte = Number(v & 0x7fn);
-        v >>= 7n;
-        if (v) byte |= 0x80;
-        out.push(byte);
-    } while (v);
-    return Buffer.from(out);
-};
-const label = (n) => varint(zigzag(n));
+// Real 498-byte `<result format="argo">` captured from a live session for
+// newsletterMetadata('invite', '0029Vb8tzN4BFLgPH89T4I1I').
+const REAL_FIXTURE = Buffer.from(
+    'BHoxMjAzNjM0MTMxNTY5MzY3NDRAbmV3c2xldHRlcjE3OTQ5OTA5Njg4MTQ2MDQxNzkxMjM5MTU3MzYzMzA1DEFDVElWRdwFMTc5MTIzOTE1N0N5cGhlclggU3BhY2UxNzk0OTkwOTY4ODE0NjA0L20xL3YvdDI0L0FRT1ltcG1pZjdLVGdSWGt5dS1PLVo0Q0RDNmdvRmtfM2ItanU4Q284RlNPVVhJSTBkaUN6a2ZSTHRCcVhVV1N3NVkwQk5YS0xscmtDSEJGQjZNU0FJaU0yRzhtT0tRbHI4MGxUQmpldnpMNWE5NWRraUNRS29NUTBMX1I4ODRJTDl1YXNULU9JUXNfWjFMSEZiVTNfekVKOFlRMS1xYz9zdHA9ZHN0LWpwZ19zMTkyeDE5Ml90dDYmY2NiPTEwLTUmb2g9MDFfUTVBYTZBSHNRd0dtOFlCdXBDZHdreS1CV0g5SEtXUENsbm5WcDNGeW1xeU1vbGlyRWcmb2U9NkIwMTQzNDYmX25jX3NpZD01ZTAzZTAmX25jX2NhdD0xMTAwMDI5VmI4dHpONEJGTGdQSDg5VDRJMUkzMjQ0DlBSRVZJRVcUVU5WRVJJRklFRApCQVNJQ0QAADoADAAUACAaIAEAIA7WBAAJAAswAQgUAAAKAwMBAwMD',
+    'base64'
+);
 
-const encodeFixture = (value) => {
-    const strings = [];
-    const string = (s, marker = true) => {
-        const bytes = Buffer.from(s, 'utf-8');
-        strings.push(bytes);
-        return Buffer.concat([...(marker ? [label(4n)] : []), label(bytes.length)]);
-    };
-    const desc = (v) => {
-        if (v === null) return label(-1n);
-        if (v === false) return label(0n);
-        if (v === true) return label(1n);
-        if (typeof v === 'string') return string(v);
-        if (Array.isArray(v)) {
-            return Buffer.concat([label(3n), label(v.length), ...v.map(desc)]);
-        }
-        const entries = Object.entries(v);
-        const parts = [label(2n), label(entries.length)];
-        for (const [key, child] of entries) {
-            parts.push(string(key, false), desc(child));
-        }
-        return Buffer.concat(parts);
-    };
-
-    const core = desc(value);
-    const stringBlock = Buffer.concat(strings);
-    return Buffer.concat([
-        Buffer.from([0x04]), // header bitset: SelfDescribing
-        label(stringBlock.length),
-        stringBlock,
-        label(core.length),
-        core
-    ]);
-};
-
-const groundTruth = {
-    id: '120363413156936744@newsletter',
-    state: { type: 'ACTIVE' },
-    thread_metadata: {
-        name: { text: 'Cypherx Space' },
-        invite: '0029Vb8tzN4BFLgPH89T4I1I',
-        verification: 'UNVERIFIED',
-        picture: { direct_path: '/m1/v/t24/AQOYmpmif7KTgRXkyu-0-Z4CDC6goFK_3b', type: 'PREVIEW' }
-    },
-    viewer_metadata: { role: 'BASIC' }
-};
-const fixture = encodeFixture({ data: { xwa2_newsletter: groundTruth } });
-
-test('decodes a SelfDescribing Argo newsletter metadata response', () => {
-    const result = decodeArgoSelfDescribing(fixture);
-    const meta = result.data.xwa2_newsletter;
-    assert.equal(meta.id, '120363413156936744@newsletter');
-    assert.equal(meta.state.type, 'ACTIVE');
-    assert.equal(meta.thread_metadata.name.text, 'Cypherx Space');
-    assert.equal(meta.thread_metadata.invite, '0029Vb8tzN4BFLgPH89T4I1I');
-    assert.equal(meta.thread_metadata.verification, 'UNVERIFIED');
-    assert.equal(meta.thread_metadata.picture.type, 'PREVIEW');
-    assert.match(meta.thread_metadata.picture.direct_path, /^\/m1\/v\/t24\//);
-    assert.equal(meta.viewer_metadata.role, 'BASIC');
+test('the captured fixture is the expected 498-byte Argo payload', () => {
+    assert.equal(REAL_FIXTURE.length, 498);
+    assert.equal(REAL_FIXTURE.subarray(0, 2).toString('hex'), '047a');
 });
 
-test('malformed Argo payload throws a descriptive error, never a raw SyntaxError', () => {
+test('schema-driven decode reproduces the known channel record', () => {
+    const response = decodeArgoForDataPath(REAL_FIXTURE, 'xwa2_newsletter');
+    const meta = parseNewsletterMetadata(response.data.xwa2_newsletter);
+    assert.equal(meta.id, '120363413156936744@newsletter');
+    assert.equal(meta.state.type, 'ACTIVE');
+    assert.equal(meta.thread_metadata.creation_time, '1791239157');
+    assert.equal(meta.thread_metadata.name.id, '1794990968814604');
+    assert.equal(meta.thread_metadata.name.text, 'CypherX Space');
+    assert.equal(meta.thread_metadata.name.update_time, '1794990968814604');
+    assert.equal(meta.thread_metadata.picture, null);
+    assert.equal(meta.thread_metadata.preview.id, '1791239157363305');
+    assert.equal(meta.thread_metadata.preview.type, 'PREVIEW');
+    assert.match(meta.thread_metadata.preview.direct_path, /^\/m1\/v\/t24\//);
+    assert.equal(meta.thread_metadata.description.text, '');
+    assert.equal(meta.thread_metadata.invite, '0029Vb8tzN4BFLgPH89T4I1I');
+    assert.equal(meta.thread_metadata.handle, null);
+    assert.equal(meta.thread_metadata.subscribers_count, '3244');
+    assert.equal(meta.thread_metadata.verification, 'UNVERIFIED');
+    // The captured invite lookup carries "BASIC" as the reaction-codes setting;
+    // the server returned viewer_metadata as null for this lookup.
+    assert.equal(meta.thread_metadata.settings.reaction_codes.value, 'BASIC');
+    assert.equal(meta.viewer_metadata, null);
+});
+
+test('decoder rejects a non-schema payload instead of returning a boolean', () => {
     assert.throws(
-        () => decodeArgoSelfDescribing(Buffer.from([0x04, 0xff, 0xff])),
-        /Argo|end of Argo/
+        () => decodeArgoForDataPath(Buffer.from([0x04, 0x00, 0x00]), 'xwa2_newsletter'),
+        /Argo|end of Argo|block|marker/
     );
 });
 
-test('executeWMexQuery routes format=argo through the decoder and preserves JSON behavior', async () => {
+test('a genuine SelfDescribing payload still decodes', () => {
+    // header 0x04 (SelfDescribing), one 6-byte String block ("A" + "hello"),
+    // core: object(2), 1 field, name len 1, String marker(4), value len 5.
+    const payload = Buffer.concat([
+        Buffer.from([0x04, 0x0c]), // header, block length 6 (zigzag 12)
+        Buffer.from('Ahello', 'utf-8'),
+        Buffer.from([0x0a]), // core length 5 (zigzag 10)
+        Buffer.from([0x04, 0x02, 0x02, 0x08, 0x0a])
+    ]);
+    const result = decodeArgoSelfDescribing(payload);
+    assert.deepEqual(result, { A: 'hello' });
+});
+
+test('executeWMexQuery routes format=argo through the schema decoder', async () => {
     const makeQuery = (content, attrs = {}) => async () => ({
         tag: 'iq',
         content: [{ tag: 'result', attrs, content }]
     });
+    const result = await executeWMexQuery({}, '27456920720571478', 'xwa2_newsletter', makeQuery(REAL_FIXTURE, { format: 'argo' }), () => 'tag');
+    assert.equal(result.id, '120363413156936744@newsletter');
+    assert.equal(result.thread_metadata.name.text, 'CypherX Space');
+    assert.equal(result.thread_metadata.invite, '0029Vb8tzN4BFLgPH89T4I1I');
+    assert.equal(result.thread_metadata.verification, 'UNVERIFIED');
+});
 
-    const argoResult = await executeWMexQuery({}, '27456920720571478', 'xwa2_newsletter', makeQuery(fixture, { format: 'argo' }), () => 'tag');
-    assert.equal(argoResult.id, '120363413156936744@newsletter');
-    assert.equal(argoResult.thread_metadata.name.text, 'Cypherx Space');
+test('executeWMexQuery keeps the JSON path unchanged', async () => {
+    const expected = { id: '120363413156936744@newsletter', state: { type: 'ACTIVE' } };
+    const json = Buffer.from(JSON.stringify({ data: { xwa2_newsletter: expected } }), 'utf-8');
+    const query = async () => ({ tag: 'iq', content: [{ tag: 'result', attrs: {}, content: json }] });
+    const result = await executeWMexQuery({}, 'qid', 'xwa2_newsletter', query, () => 'tag');
+    assert.deepEqual(result, expected);
+});
 
-    const json = Buffer.from(JSON.stringify({ data: { xwa2_newsletter: groundTruth } }), 'utf-8');
-    const jsonResult = await executeWMexQuery({}, 'qid', 'xwa2_newsletter', makeQuery(json), () => 'tag');
-    assert.deepEqual(jsonResult, groundTruth);
+test('executeWMexQuery wraps decoder failures in a Boom with a payload preview', async () => {
+    const bad = Buffer.from([0x04, 0xff, 0xff]);
+    const query = async () => ({ tag: 'iq', content: [{ tag: 'result', attrs: { format: 'argo' }, content: bad }] });
+    await assert.rejects(
+        () => executeWMexQuery({}, 'qid', 'xwa2_newsletter', query, () => 'tag'),
+        (err) => err instanceof Boom && /Failed to decode Argo response/.test(err.message) && !!err.data?.preview
+    );
 });
 
 test('newsletterMetadata variables match the current query exactly (INVITE)', () => {
-    const variables = buildNewsletterMetadataVariables('invite', '0029Vb8tzN4BFLgPH89T4I1I');
-    assert.deepEqual(variables, {
+    assert.deepEqual(buildNewsletterMetadataVariables('invite', '0029Vb8tzN4BFLgPH89T4I1I'), {
         fetch_creation_time: true,
         fetch_full_image: true,
         fetch_pinned_messages: false,
@@ -123,8 +107,7 @@ test('newsletterMetadata variables match the current query exactly (INVITE)', ()
 });
 
 test('newsletterMetadata variables match the current query exactly (JID)', () => {
-    const variables = buildNewsletterMetadataVariables('jid', '120363413156936744@newsletter');
-    assert.deepEqual(variables, {
+    assert.deepEqual(buildNewsletterMetadataVariables('jid', '120363413156936744@newsletter'), {
         fetch_creation_time: true,
         fetch_full_image: true,
         fetch_pinned_messages: false,
@@ -147,23 +130,5 @@ test('invite URLs are stripped but raw invite codes are untouched', () => {
     assert.equal(
         buildNewsletterMetadataVariables('invite', '0029Vb8tzN4BFLgPH89T4I1I').input.key,
         '0029Vb8tzN4BFLgPH89T4I1I'
-    );
-});
-
-test('Argo metadata decodes to the known channel record', () => {
-    const meta = parseNewsletterMetadata(decodeArgoSelfDescribing(fixture).data.xwa2_newsletter);
-    assert.equal(meta.id, '120363413156936744@newsletter');
-    assert.equal(meta.state.type, 'ACTIVE');
-    assert.equal(meta.thread_metadata.name.text, 'Cypherx Space');
-    assert.equal(meta.thread_metadata.invite, '0029Vb8tzN4BFLgPH89T4I1I');
-    assert.equal(meta.thread_metadata.verification, 'UNVERIFIED');
-});
-
-test('executeWMexQuery wraps decoder failures in a Boom with a payload preview', async () => {
-    const bad = Buffer.from([0x04, 0xff, 0xff]);
-    const query = async () => ({ tag: 'iq', content: [{ tag: 'result', attrs: { format: 'argo' }, content: bad }] });
-    await assert.rejects(
-        () => executeWMexQuery({}, 'qid', 'xwa2_newsletter', query, () => 'tag'),
-        (err) => err instanceof Boom && /Failed to decode Argo response/.test(err.message) && !!err.data?.preview
     );
 });

@@ -233,9 +233,12 @@ before the 6.7.10 bump.
 - **`newsletterMetadata` variables**: now sends the complete current query input, including
   `input.view_role: 'GUEST'` and the `fetch_pinned_messages`, `fetch_status_metadata`,
   `fetch_wamo_sub` flags — the server rejects the request as `400 Bad Request` when they are missing
-- **`executeWMexQuery`**: handles `<result format="argo">` responses via a built-in SelfDescribing
+- **`executeWMexQuery`**: handles `<result format="argo">` responses via a schema-driven
   Argo decoder (`lib/Utils/argo.js`), so callers keep receiving the same GraphQL object shape;
   JSON responses are unchanged and malformed Argo payloads throw a descriptive `Boom` with a
   base64 preview instead of a raw `SyntaxError`
-- Added `test/argo-metadata.test.mjs` covering the Argo branch, JSON regression, and error handling
+- The decoder walks the `WAWebMexFetchNewsletterJobQuery` wire schema (newsletter,
+  join/leave, update/create) instead of guessing a self-describing Core
+- Added `test/argo-metadata.test.mjs` with the real 498-byte live payload, JSON regression,
+  and error handling
 
