@@ -1,7 +1,8 @@
 # Changes after v6.7.10
 
 > **Version policy:** this document tracks everything added after v6.7.10. **v6.8.0** is the
-> first release containing these changes; npm remains on 6.7.10 until a separate publish.
+> first release containing these changes; **v6.8.1** adds the newsletter metadata variables fix.
+> npm remains on 6.7.10 until a separate publish.
 
 ---
 
@@ -230,6 +231,9 @@ before the 6.7.10 bump.
 - **`newsletterMetadata`**: updated the metadata query ID to the one current WhatsApp Web uses
   (`27456920720571478`, verified from the live WA Web bundle) — the old ID (`6563316087068696`)
   is stale and can make the server answer with binary Argo instead of JSON
+- **`newsletterMetadata` variables**: now sends the complete current query input, including
+  `input.view_role: 'GUEST'` and the `fetch_pinned_messages`, `fetch_status_metadata`,
+  `fetch_wamo_sub` flags — the server rejects the request as `400 Bad Request` when they are missing
 - **`executeWMexQuery`**: handles `<result format="argo">` responses via a built-in SelfDescribing
   Argo decoder (`lib/Utils/argo.js`), so callers keep receiving the same GraphQL object shape;
   JSON responses are unchanged and malformed Argo payloads throw a descriptive `Boom` with a

@@ -13,6 +13,26 @@ byte-for-byte unchanged. Without an authenticated live session here we cannot as
 `newsletterSubscribers`, `newsletterFollow`, etc. currently return Argo; the observed evidence
 only covers metadata.
 
+## Variables (2026-11-18 follow-up)
+
+The new query also requires the full variable set, including `input.view_role`. The server
+answers `400 Bad Request` when it is missing. `newsletterMetadata` now sends:
+
+```json
+{
+  "fetch_creation_time": true,
+  "fetch_full_image": true,
+  "fetch_pinned_messages": false,
+  "fetch_status_metadata": false,
+  "fetch_viewer_metadata": true,
+  "fetch_wamo_sub": false,
+  "input": { "key": "<jid-or-invite-code>", "type": "JID|INVITE", "view_role": "GUEST" }
+}
+```
+
+`view_role: "GUEST"` is sent for both JID and INVITE lookups, and `fetch_viewer_metadata`
+stays `true` for invites.
+
 ## Current query ID
 
 Verified against the live `web.whatsapp.com` bundle on 2026-11-18:

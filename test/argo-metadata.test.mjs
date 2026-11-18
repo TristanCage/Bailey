@@ -3,6 +3,7 @@ import test from 'node:test';
 import { Boom } from '@hapi/boom';
 import { decodeArgoSelfDescribing } from '../lib/Utils/argo.js';
 import { executeWMexQuery } from '../lib/Socket/mex.js';
+import { buildNewsletterMetadataVariables, parseNewsletterMetadata } from '../lib/Socket/newsletter.js';
 
 // --- tiny Argo SelfDescribing encoder, used only to build test fixtures ---
 const zigzag = (n) => {
@@ -102,6 +103,60 @@ test('executeWMexQuery routes format=argo through the decoder and preserves JSON
     const json = Buffer.from(JSON.stringify({ data: { xwa2_newsletter: groundTruth } }), 'utf-8');
     const jsonResult = await executeWMexQuery({}, 'qid', 'xwa2_newsletter', makeQuery(json), () => 'tag');
     assert.deepEqual(jsonResult, groundTruth);
+});
+
+test('newsletterMetadata variables match the current query exactly (INVITE)', () => {
+    const variables = buildNewsletterMetadataVariables('invite', '0029Vb8tzN4BFLgPH89T4I1I');
+    assert.deepEqual(variables, {
+        fetch_creation_time: true,
+        fetch_full_image: true,
+        fetch_pinned_messages: false,
+        fetch_status_metadata: false,
+        fetch_viewer_metadata: true,
+        fetch_wamo_sub: false,
+        input: {
+            key: '0029Vb8tzN4BFLgPH89T4I1I',
+            type: 'INVITE',
+            view_role: 'GUEST'
+        }
+    });
+});
+
+test('newsletterMetadata variables match the current query exactly (JID)', () => {
+    const variables = buildNewsletterMetadataVariables('jid', '120363413156936744@newsletter');
+    assert.deepEqual(variables, {
+        fetch_creation_time: true,
+        fetch_full_image: true,
+        fetch_pinned_messages: false,
+        fetch_status_metadata: false,
+        fetch_viewer_metadata: true,
+        fetch_wamo_sub: false,
+        input: {
+            key: '120363413156936744@newsletter',
+            type: 'JID',
+            view_role: 'GUEST'
+        }
+    });
+});
+
+test('invite URLs are stripped but raw invite codes are untouched', () => {
+    assert.equal(
+        buildNewsletterMetadataVariables('invite', 'https://whatsapp.com/channel/0029Vb8tzN4BFLgPH89T4I1I?foo=bar').input.key,
+        '0029Vb8tzN4BFLgPH89T4I1I'
+    );
+    assert.equal(
+        buildNewsletterMetadataVariables('invite', '0029Vb8tzN4BFLgPH89T4I1I').input.key,
+        '0029Vb8tzN4BFLgPH89T4I1I'
+    );
+});
+
+test('Argo metadata decodes to the known channel record', () => {
+    const meta = parseNewsletterMetadata(decodeArgoSelfDescribing(fixture).data.xwa2_newsletter);
+    assert.equal(meta.id, '120363413156936744@newsletter');
+    assert.equal(meta.state.type, 'ACTIVE');
+    assert.equal(meta.thread_metadata.name.text, 'Cypherx Space');
+    assert.equal(meta.thread_metadata.invite, '0029Vb8tzN4BFLgPH89T4I1I');
+    assert.equal(meta.thread_metadata.verification, 'UNVERIFIED');
 });
 
 test('executeWMexQuery wraps decoder failures in a Boom with a payload preview', async () => {
