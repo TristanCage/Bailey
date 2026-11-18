@@ -69,6 +69,27 @@ checks and descriptive errors.
 Numeric-ish leaves (`creation_time`, `update_time`, `subscribers_count`, picture
 `id`) arrive as strings.
 
+## Live verification (2026-11-18)
+
+Run against the production session with the shipped decoder:
+
+- `newsletterMetadata('invite', '0029Vb8tzN4BFLgPH89T4I1I')` →
+  JID `120363413156936744@newsletter`, name `CypherX Space`, state `ACTIVE`,
+  verification `UNVERIFIED`, invite echoed, `subscribers_count` `3236`,
+  `viewer_metadata` `null`, `settings.reaction_codes.value` `BASIC`
+- `newsletterMetadata('jid', '120363413156936744@newsletter')` → same record,
+  plus `picture` (`type: IMAGE`), `viewer_metadata.role` `OWNER`, and
+  `viewer_metadata.settings` (`MUTE_FOLLOWER_ACTIVITY`, `MUTE_ADMIN_ACTIVITY`),
+  `subscribers_count` `3245`
+
+The JID lookup exercises additional blocks (picture type/image, viewer role and
+the user-settings list) and decodes cleanly, so the schema covers both the
+invite and JID shapes.
+
+Note: `BASIC` is the reaction-codes setting, not `viewer_metadata.role`. The
+captured invite payload has `viewer_metadata: null`; the JID lookup returns
+`owner` for this account.
+
 ## Verification
 
 `test/argo-metadata.test.mjs` hard-codes the real 498-byte base64 fixture and
