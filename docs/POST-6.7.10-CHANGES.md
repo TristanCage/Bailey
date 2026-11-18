@@ -1,8 +1,7 @@
 # Changes after v6.7.10
 
 > **Version policy:** this document tracks everything added after v6.7.10. **v6.8.0** is the
-> first release containing these changes; **v6.8.1** adds the newsletter metadata variables fix.
-> npm remains on 6.7.10 until a separate publish.
+> release containing these changes; npm remains on 6.7.10 until a separate publish.
 
 ---
 
