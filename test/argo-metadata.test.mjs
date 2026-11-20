@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { Boom } from '@hapi/boom';
-import { decodeArgoForDataPath, decodeArgoSelfDescribing } from '../lib/Utils/argo.js';
+import { decodeArgoForDataPath, decodeArgoSelfDescribing, decodeArgoWithSchema, recordNode, fieldNode, listNode, stringNode } from '../lib/Utils/argo.js';
 import { executeWMexQuery } from '../lib/Socket/mex.js';
 import { buildNewsletterMetadataVariables, parseNewsletterMetadata } from '../lib/Socket/newsletter.js';
 
@@ -120,6 +120,33 @@ test('newsletterMetadata variables match the current query exactly (JID)', () =>
             view_role: 'GUEST'
         }
     });
+});
+
+test('nullable list of records decodes (nullable item) — covers labeled record', () => {
+    const inner = recordNode([fieldNode('id', stringNode())]);
+    const schema = recordNode([fieldNode('items', listNode(inner))]);
+    // String block: 'A' (1 byte); Core: items length 1, item non-null marker 0, id length 1.
+    const payload = Buffer.concat([
+        Buffer.from([0x04, 0x02]), // header, block length 1
+        Buffer.from('A', 'utf-8'),
+        Buffer.from([0x06]), // core length 3
+        Buffer.from([0x02, 0x00, 0x02]) // items len 1; item non-null marker; id len 1
+    ]);
+    const result = decodeArgoWithSchema(payload, schema);
+    assert.deepEqual(result, { items: [{ id: 'A' }] });
+});
+
+test('nullable list of records with null item decodes', () => {
+    const inner = recordNode([fieldNode('id', stringNode())]);
+    const schema = recordNode([fieldNode('items', listNode(inner))]);
+    // String block empty; Core: items len 1, item null (-1).
+    const payload = Buffer.concat([
+        Buffer.from([0x04, 0x00]), // header, block length 0
+        Buffer.from([0x04]), // core length 2
+        Buffer.from([0x02, 0x01]) // items len 1; item null (-1 as zigzag 1)
+    ]);
+    const result = decodeArgoWithSchema(payload, schema);
+    assert.deepEqual(result, { items: [null] });
 });
 
 test('invite URLs are stripped but raw invite codes are untouched', () => {

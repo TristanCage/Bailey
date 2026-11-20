@@ -7,13 +7,13 @@ A WebSockets library for interacting with WhatsApp Web.
 Latest release from GitHub:
 
 ```bash
-npm install github:TristanCage/Bailey#v6.8.0 --allow-git=all
+npm install github:TristanCage/Bailey#v6.8.1 --allow-git=all
 ```
 
 or with yarn:
 
 ```bash
-yarn add github:TristanCage/Bailey#v6.8.0
+yarn add github:TristanCage/Bailey#v6.8.1
 ```
 
 Requires Node.js 20+.
