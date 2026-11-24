@@ -90,6 +90,35 @@ test('executeWMexQuery wraps decoder failures in a Boom with a payload preview',
     );
 });
 
+test('73-byte errors-only payload decodes to Not Allowed with extensions', () => {
+    const payload = Buffer.from('BGJOb3QgQWxsb3dlZGVycm9yX2NvZGVpc19yZXRyeWFibGVzZXZlcml0eUNSSVRJQ0FMBgCqBiIAAQIWAwIABAYUDBgAEAgQAw==', 'base64');
+    assert.equal(payload.length, 73);
+    const response = decodeArgoForDataPath(payload, 'xwa2_newsletter');
+    assert.equal(response.data.xwa2_newsletter, null);
+    assert.equal(response.errors.length, 1);
+    assert.equal(response.errors[0].message, 'Not Allowed');
+    assert.deepEqual(response.errors[0].path, [0]);
+    assert.equal(response.errors[0].extensions.is_retryable, false);
+    assert.equal(response.errors[0].extensions.severity, 'CRITICAL');
+    assert.equal(typeof response.errors[0].extensions.error_code, 'number');
+});
+
+test('executeWMexQuery surfaces Argo GraphQL errors as Not Allowed', async () => {
+    const payload = Buffer.from('BGJOb3QgQWxsb3dlZGVycm9yX2NvZGVpc19yZXRyeWFibGVzZXZlcml0eUNSSVRJQ0FMBgCqBiIAAQIWAwIABAYUDBgAEAgQAw==', 'base64');
+    const query = async () => ({ tag: 'iq', content: [{ tag: 'result', attrs: { format: 'argo' }, content: payload }] });
+    await assert.rejects(
+        () => executeWMexQuery({}, '27456920720571478', 'xwa2_newsletter', query, () => 'tag'),
+        (err) => err instanceof Boom && /GraphQL server error: Not Allowed/.test(err.message) && !!err.data?.extensions
+    );
+});
+
+test('inline argo_real fixture matches /tmp/opencode/argo_real.bin', async () => {
+    const { readFile } = await import('node:fs/promises');
+    const bin = await readFile('/tmp/opencode/argo_real.bin');
+    assert.equal(bin.length, 498);
+    assert.equal(Buffer.from(bin).toString('base64'), REAL_FIXTURE.toString('base64'));
+});
+
 test('newsletterMetadata variables match the current query exactly (INVITE)', () => {
     assert.deepEqual(buildNewsletterMetadataVariables('invite', '0029Vb8tzN4BFLgPH89T4I1I'), {
         fetch_creation_time: true,
@@ -147,6 +176,25 @@ test('nullable list of records with null item decodes', () => {
     ]);
     const result = decodeArgoWithSchema(payload, schema);
     assert.deepEqual(result, { items: [null] });
+});
+
+test('non-null record list decodes without markers, separate value pool (viewer settings shape)', () => {
+    const item = recordNode([
+        fieldNode('type', { k: 'scalar', type: 'STRING', block: 'T', nullable: true }),
+        fieldNode('value', { k: 'scalar', type: 'STRING', block: 'V', nullable: true })
+    ], { nonNull: true });
+    const schema = recordNode([fieldNode('settings', listNode(item))]);
+    // T block: 'AA'(2) + 'B'(1); V block: 'OFF'(3). Core: len 2, item1 {len 2, len 3}, item2 {len 1, backref 0}.
+    const payload = Buffer.concat([
+        Buffer.from([0x04, 0x06]), // header, T block length 3
+        Buffer.from('AAB', 'utf-8'),
+        Buffer.from([0x06]), // V block length 3
+        Buffer.from('OFF', 'utf-8'),
+        Buffer.from([0x0a]), // core length 5
+        Buffer.from([0x04, 0x04, 0x06, 0x02, 0x07]) // len 2; 'AA'; 'OFF'; 'B'; backref OFF
+    ]);
+    const result = decodeArgoWithSchema(payload, schema);
+    assert.deepEqual(result, { settings: [{ type: 'AA', value: 'OFF' }, { type: 'B', value: 'OFF' }] });
 });
 
 test('invite URLs are stripped but raw invite codes are untouched', () => {
