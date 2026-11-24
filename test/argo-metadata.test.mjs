@@ -3,7 +3,7 @@ import test from 'node:test';
 import { Boom } from '@hapi/boom';
 import { decodeArgoForDataPath, decodeArgoSelfDescribing, decodeArgoWithSchema, recordNode, fieldNode, listNode, stringNode } from '../lib/Utils/argo.js';
 import { executeWMexQuery } from '../lib/Socket/mex.js';
-import { buildNewsletterMetadataVariables, parseNewsletterMetadata } from '../lib/Socket/newsletter.js';
+import { buildNewsletterMetadataVariables, buildNewsletterSubscribedVariables, parseNewsletterMetadata } from '../lib/Socket/newsletter.js';
 
 // Real 498-byte `<result format="argo">` captured from a live session for
 // newsletterMetadata('invite', '0029Vb8tzN4BFLgPH89T4I1I').
@@ -195,6 +195,27 @@ test('non-null record list decodes without markers, separate value pool (viewer 
     ]);
     const result = decodeArgoWithSchema(payload, schema);
     assert.deepEqual(result, { settings: [{ type: 'AA', value: 'OFF' }, { type: 'B', value: 'OFF' }] });
+});
+
+test('subscribed-list variables match the current query exactly', () => {
+    assert.deepEqual(buildNewsletterSubscribedVariables(), {
+        fetch_status_metadata: false,
+        fetch_wamo_sub: false
+    });
+});
+
+test('non-empty subscribed list decodes items without markers', () => {
+    const item = recordNode([fieldNode('id', stringNode())], { nonNull: true });
+    const schema = recordNode([fieldNode('data', recordNode([fieldNode('list', listNode(item))]))]);
+    // String block: 'AABB' (4). Core: data present, list len 2, 'AA', 'BB'.
+    const payload = Buffer.concat([
+        Buffer.from([0x04, 0x08]),
+        Buffer.from('AABB', 'utf-8'),
+        Buffer.from([0x08]),
+        Buffer.from([0x00, 0x04, 0x04, 0x04])
+    ]);
+    const result = decodeArgoWithSchema(payload, schema);
+    assert.deepEqual(result, { data: { list: [{ id: 'AA' }, { id: 'BB' }] } });
 });
 
 test('invite URLs are stripped but raw invite codes are untouched', () => {
